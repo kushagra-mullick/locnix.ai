@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Locnix.ai - Location-Based Task Management App</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="auth-section" id="auth-section">
+        <h2>Welcome to Locnix.ai</h2>
+        <form id="auth-form">
+          <input type="email" id="email" placeholder="Email" required />
+          <input type="password" id="password" placeholder="Password" required />
+          <button type="submit" id="auth-button">Sign In</button>
+          <button type="button" id="toggle-auth">Switch to Sign Up</button>
+          <button type="button" id="guest-access" class="guest-btn">Continue as Guest</button>
+        </form>
+      </div>
+
+      <div class="app-section" id="app-section" style="display: none;">
+        <!-- User Status Bar -->
+        <div class="user-status-bar">
+          <div class="user-info">
+            <div class="user-avatar">U</div>
+            <span id="user-status-text">Guest Mode (tasks will not be saved)</span>
+          </div>
+          <button id="sign-out" class="sign-out-btn">Sign Out</button>
+        </div>
+
+        <!-- Create New Task Section -->
+        <div class="create-task-section">
+          <h2>Create New Task</h2>
+          <div class="task-form">
+            <div class="input-group">
+              <input type="text" id="task" class="task-input" placeholder="What needs to be done? Try 'Remind me to buy groceries'" />
+            </div>
+            
+            <div class="location-group">
+              <div class="location-search">
+                <input type="text" id="location-search" placeholder="Search for a location..." />
+                <input type="text" id="location" placeholder="Location" readonly />
+              </div>
+              <div class="location-buttons">
+                <button onclick="getCurrentLocation()" class="location-btn">
+                  <span>📍</span> Current Location
+                </button>
+                <button onclick="toggleMap()" class="location-btn">
+                  <span>🗺️</span> Select on Map
+                </button>
+              </div>
+            </div>
+
+            <div class="reminder-group">
+              <select id="reminder-type" class="reminder-select">
+                <option value="none">No reminder</option>
+                <option value="time">Time-based</option>
+                <option value="location">Location-based</option>
+                <option value="both">Both</option>
+              </select>
+              <div id="time-reminder" class="reminder-option" style="display: none;">
+                <input type="datetime-local" id="reminder-time" />
+              </div>
+            </div>
+
+            <div id="map" class="map-container"></div>
+            <button onclick="addTask()" class="add-task-btn">Add Task</button>
+          </div>
+        </div>
+
+        <!-- Tasks Section -->
+        <div class="tasks-section">
+          <h2>Tasks</h2>
+          <div class="task-filters">
+            <button onclick="filterTasks('all')" class="filter-btn active">All</button>
+            <button onclick="filterTasks('active')" class="filter-btn">Active</button>
+            <button onclick="filterTasks('completed')" class="filter-btn">Completed</button>
+          </div>
+          <div class="task-categories">
+            <button onclick="filterByCategory('work')" class="category-btn">Work</button>
+            <button onclick="filterByCategory('errands')" class="category-btn">Errands</button>
+            <button onclick="filterByCategory('personal')" class="category-btn">Personal</button>
+          </div>
+          <ul id="tasks" class="tasks-list"></ul>
+        </div>
+
+        <!-- Saved Locations Section -->
+        <div class="saved-locations-section">
+          <h2>Saved Locations</h2>
+          <div class="add-location-form">
+            <input type="text" id="bookmark-name" placeholder="Name this location" />
+            <button onclick="addBookmark()" class="save-location-btn">Save Location</button>
+          </div>
+          <ul id="bookmarks-list" class="locations-list"></ul>
+        </div>
+      </div>
+    </div>
+    
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
