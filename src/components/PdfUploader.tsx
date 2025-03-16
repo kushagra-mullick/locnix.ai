@@ -1,17 +1,16 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
 import { Loader2, FileText, X, Check } from 'lucide-react';
 import * as pdfjsLib from 'pdfjs-dist';
-import { FlashcardData } from '@/context/FlashcardContext';
+import { Flashcard } from '@/context/FlashcardContext';
 
 // Set worker path
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 interface PdfUploaderProps {
-  onExtractComplete: (flashcards: FlashcardData[]) => void;
+  onExtractComplete: (flashcards: Omit<Flashcard, 'id' | 'dateCreated' | 'lastReviewed' | 'nextReviewDate'>[]) => void;
   onClose: () => void;
 }
 
@@ -111,7 +110,7 @@ const PdfUploader: React.FC<PdfUploaderProps> = ({ onExtractComplete, onClose })
         .filter(sentence => sentence.trim().length > 20)
         .slice(0, 10);
       
-      const generatedFlashcards: FlashcardData[] = sentences.map((sentence, index) => {
+      const generatedFlashcards = sentences.map((sentence, index) => {
         // Simple logic to extract a question from the sentence
         const words = sentence.trim().split(' ');
         const half = Math.floor(words.length / 2);
@@ -125,8 +124,9 @@ const PdfUploader: React.FC<PdfUploaderProps> = ({ onExtractComplete, onClose })
         return {
           front,
           back,
-          category: randomCategory
-        };
+          category: randomCategory,
+          difficulty: Math.random() > 0.7 ? 'hard' : Math.random() > 0.4 ? 'medium' : 'easy'
+        } as Omit<Flashcard, 'id' | 'dateCreated' | 'lastReviewed' | 'nextReviewDate'>;
       });
       
       onExtractComplete(generatedFlashcards);
