@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Sparkles, Brain, Zap } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
   return (
@@ -36,12 +37,16 @@ const Hero = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mt-8 animate-slide-up" style={{ animationDelay: '0.3s' }}>
-            <Button size="lg" className="rounded-full px-8 shadow-lg hover:shadow-xl transition-all gap-2">
-              Get Started <ArrowRight className="w-4 h-4" />
-            </Button>
-            <Button size="lg" variant="outline" className="rounded-full px-8 border-2">
-              How It Works
-            </Button>
+            <Link to="/signup">
+              <Button size="lg" className="rounded-full px-8 shadow-lg hover:shadow-xl transition-all gap-2">
+                Get Started <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+            <Link to="/study">
+              <Button size="lg" variant="outline" className="rounded-full px-8 border-2">
+                How It Works
+              </Button>
+            </Link>
           </div>
 
           {/* Stats */}
