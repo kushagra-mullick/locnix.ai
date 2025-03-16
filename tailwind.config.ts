@@ -132,8 +132,25 @@ export default {
 			},
 			backdropBlur: {
 				xs: '2px',
+			},
+			backfaceVisibility: {
+				hidden: 'hidden',
+				visible: 'visible',
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		function({ addUtilities }) {
+			const newUtilities = {
+				'.backface-visible': {
+					'backface-visibility': 'visible',
+				},
+				'.backface-hidden': {
+					'backface-visibility': 'hidden',
+				},
+			}
+			addUtilities(newUtilities)
+		}
+	],
 } satisfies Config;
