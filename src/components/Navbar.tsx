@@ -42,7 +42,7 @@ const Navbar = () => {
           className="flex items-center gap-2 text-xl font-display font-semibold text-primary"
         >
           <Brain className="w-6 h-6" />
-          <span className="animate-fade-in">FlashGenius</span>
+          <span className="animate-fade-in">Locnix.ai</span>
         </Link>
 
         {/* Desktop Navigation */}

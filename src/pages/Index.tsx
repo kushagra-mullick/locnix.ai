@@ -60,7 +60,7 @@ const Index = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <Testimonial 
-                quote="FlashGenius helped me ace my medical exams. The AI created better flashcards than I could have made myself in a fraction of the time."
+                quote="Locnix.ai helped me ace my medical exams. The AI created better flashcards than I could have made myself in a fraction of the time."
                 author="Sarah J."
                 role="Medical Student"
               />
@@ -70,7 +70,7 @@ const Index = () => {
                 role="High School Teacher"
               />
               <Testimonial 
-                quote="I've tried many flashcard apps, but the AI in FlashGenius actually understands the material and creates cards that test true comprehension."
+                quote="I've tried many flashcard apps, but the AI in Locnix.ai actually understands the material and creates cards that test true comprehension."
                 author="Alex K."
                 role="Language Learner"
               />
@@ -91,7 +91,7 @@ const Index = () => {
                 Ready to Transform Your Learning?
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-xl mx-auto">
-                Join thousands of students who are already studying smarter, not harder, with FlashGenius.
+                Join thousands of students who are already studying smarter, not harder, with Locnix.ai.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -112,7 +112,7 @@ const Index = () => {
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="font-semibold text-lg mb-4">FlashGenius</h3>
+              <h3 className="font-semibold text-lg mb-4">Locnix.ai</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 <li><a href="#" className="hover:text-primary transition-colors">About Us</a></li>
                 <li><a href="#" className="hover:text-primary transition-colors">Features</a></li>
@@ -140,14 +140,14 @@ const Index = () => {
             <div>
               <h3 className="font-semibold text-lg mb-4">Contact</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                <li>support@flashgenius.app</li>
+                <li>support@locnix.ai</li>
                 <li>+1 (555) 123-4567</li>
                 <li>123 Learning Lane<br />San Francisco, CA 94103</li>
               </ul>
             </div>
           </div>
           <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 text-center text-sm text-gray-600 dark:text-gray-400">
-            © {new Date().getFullYear()} FlashGenius. All rights reserved.
+            © {new Date().getFullYear()} Locnix.ai. All rights reserved.
           </div>
         </div>
       </footer>

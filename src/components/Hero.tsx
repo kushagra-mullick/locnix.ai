@@ -25,7 +25,7 @@ const Hero = () => {
           <h1 className="text-4xl md:text-6xl font-display font-bold tracking-tight max-w-3xl animate-slide-up" style={{ animationDelay: '0.1s' }}>
             Learn Smarter, Not Harder with{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
-              FlashGenius
+              Locnix.ai
             </span>
           </h1>
 
