@@ -6,7 +6,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { useFlashcards } from '@/context/FlashcardContext';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { 
   Plus, Search, Clock, LayoutGrid, Book, Trash2, Edit, 
   Brain, ArrowRight, Filter, ListFilter, Calendar, FileText,
@@ -102,9 +102,10 @@ const Dashboard = () => {
       category: card.category || ''
     });
   };
-
+  
   const handleConfirmDelete = () => {
     if (cardToDelete) {
+      console.log("Deleting flashcard with ID:", cardToDelete);
       deleteFlashcard(cardToDelete);
       toast({
         title: "Flashcard deleted",
@@ -116,6 +117,7 @@ const Dashboard = () => {
   };
 
   const handleDeleteRequest = (id: string) => {
+    console.log("Delete requested for flashcard ID:", id);
     setCardToDelete(id);
     setShowDeleteAlert(true);
   };
@@ -492,8 +494,16 @@ const Dashboard = () => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setCardToDelete(null)}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmDelete} className="bg-red-500 hover:bg-red-600">
+            <AlertDialogCancel onClick={() => {
+              setCardToDelete(null);
+              setShowDeleteAlert(false);
+            }}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleConfirmDelete} 
+              className="bg-red-500 hover:bg-red-600"
+            >
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
