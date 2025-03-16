@@ -1,24 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { useFlashcards } from '@/context/FlashcardContext';
 import { useToast } from '@/components/ui/use-toast';
 import { 
   Plus, Search, Clock, LayoutGrid, Book, Trash2, Edit, 
-  Brain, ArrowRight, Filter, ListFilter, Calendar, FileText 
+  Brain, ArrowRight, Filter, ListFilter, Calendar, FileText,
+  AlertCircle
 } from 'lucide-react';
 import FlashcardGenerator from '@/components/FlashcardGenerator';
 import PdfUploader from '@/components/PdfUploader';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Flashcard } from '@/context/FlashcardContext';
 
 const Dashboard = () => {
-  const { flashcards, addFlashcard, addFlashcards, deleteFlashcard } = useFlashcards();
+  const { flashcards, addFlashcard, addFlashcards, deleteFlashcard, updateFlashcard } = useFlashcards();
   const [searchQuery, setSearchQuery] = useState('');
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [showGenerator, setShowGenerator] = useState(false);
@@ -26,6 +38,9 @@ const Dashboard = () => {
   const [newCardFront, setNewCardFront] = useState('');
   const [newCardBack, setNewCardBack] = useState('');
   const [newCardCategory, setNewCardCategory] = useState('');
+  const [editingCard, setEditingCard] = useState<null | { id: string, front: string, back: string, category?: string }>(null);
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+  const [cardToDelete, setCardToDelete] = useState<string | null>(null);
   const { toast } = useToast();
 
   const handleAddFlashcard = () => {
@@ -55,6 +70,56 @@ const Dashboard = () => {
     setIsCreateDialogOpen(false);
   };
 
+  const handleEditFlashcard = () => {
+    if (!editingCard || !editingCard.front.trim() || !editingCard.back.trim()) {
+      toast({
+        title: "Incomplete card",
+        description: "Both the front and back of the card are required.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    updateFlashcard(editingCard.id, {
+      front: editingCard.front,
+      back: editingCard.back,
+      category: editingCard.category
+    });
+
+    toast({
+      title: "Flashcard updated",
+      description: "Your flashcard has been successfully updated."
+    });
+
+    setEditingCard(null);
+  };
+
+  const handleOpenEditDialog = (card: any) => {
+    setEditingCard({
+      id: card.id,
+      front: card.front,
+      back: card.back,
+      category: card.category || ''
+    });
+  };
+
+  const handleConfirmDelete = () => {
+    if (cardToDelete) {
+      deleteFlashcard(cardToDelete);
+      toast({
+        title: "Flashcard deleted",
+        description: "The flashcard has been removed from your collection."
+      });
+      setCardToDelete(null);
+      setShowDeleteAlert(false);
+    }
+  };
+
+  const handleDeleteRequest = (id: string) => {
+    setCardToDelete(id);
+    setShowDeleteAlert(true);
+  };
+
   const handleGeneratedFlashcards = (generatedCards: any[]) => {
     const formattedCards = generatedCards.map(card => ({
       front: card.front,
@@ -63,14 +128,6 @@ const Dashboard = () => {
     }));
     addFlashcards(formattedCards);
     setShowGenerator(false);
-  };
-
-  const handleDeleteFlashcard = (id: string) => {
-    deleteFlashcard(id);
-    toast({
-      title: "Flashcard deleted",
-      description: "The flashcard has been removed from your collection."
-    });
   };
 
   const handlePdfFlashcardsGenerated = (flashcards: any[]) => {
@@ -118,6 +175,19 @@ const Dashboard = () => {
       reviewDate.getFullYear() === today.getFullYear()
     );
   }).length;
+
+  // Add event listener for edit flashcard events
+  useEffect(() => {
+    const handleEditEvent = (e: CustomEvent) => {
+      handleOpenEditDialog(e.detail);
+    };
+
+    document.addEventListener('editFlashcard', handleEditEvent as EventListener);
+    
+    return () => {
+      document.removeEventListener('editFlashcard', handleEditEvent as EventListener);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -238,7 +308,7 @@ const Dashboard = () => {
                     <FlashcardPreview 
                       key={card.id}
                       card={card}
-                      onDelete={() => handleDeleteFlashcard(card.id)}
+                      onDelete={() => handleDeleteRequest(card.id)}
                     />
                   ))}
                 </div>
@@ -270,7 +340,7 @@ const Dashboard = () => {
                         <FlashcardPreview 
                           key={card.id}
                           card={card}
-                          onDelete={() => handleDeleteFlashcard(card.id)}
+                          onDelete={() => handleDeleteRequest(card.id)}
                         />
                       ))}
                     </div>
@@ -301,7 +371,7 @@ const Dashboard = () => {
                       <FlashcardPreview 
                         key={card.id}
                         card={card}
-                        onDelete={() => handleDeleteFlashcard(card.id)}
+                        onDelete={() => handleDeleteRequest(card.id)}
                       />
                     ))
                   }
@@ -350,16 +420,85 @@ const Dashboard = () => {
               />
             </div>
           </div>
-          <div className="flex justify-end gap-2">
+          <DialogFooter>
             <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
               Cancel
             </Button>
             <Button onClick={handleAddFlashcard}>
               Create Flashcard
             </Button>
-          </div>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
+      
+      {/* Edit Flashcard Dialog */}
+      <Dialog open={!!editingCard} onOpenChange={(open) => !open && setEditingCard(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Flashcard</DialogTitle>
+            <DialogDescription>
+              Update your flashcard details.
+            </DialogDescription>
+          </DialogHeader>
+          {editingCard && (
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-front">Front (Question)</Label>
+                <Textarea 
+                  id="edit-front" 
+                  placeholder="Enter your question or term"
+                  value={editingCard.front}
+                  onChange={e => setEditingCard({...editingCard, front: e.target.value})}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-back">Back (Answer)</Label>
+                <Textarea 
+                  id="edit-back" 
+                  placeholder="Enter the answer or definition"
+                  value={editingCard.back}
+                  onChange={e => setEditingCard({...editingCard, back: e.target.value})}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-category">Category (Optional)</Label>
+                <Input 
+                  id="edit-category" 
+                  placeholder="E.g., Mathematics, History, etc."
+                  value={editingCard.category}
+                  onChange={e => setEditingCard({...editingCard, category: e.target.value})}
+                />
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingCard(null)}>
+              Cancel
+            </Button>
+            <Button onClick={handleEditFlashcard}>
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Delete Confirmation Alert */}
+      <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete this flashcard from your collection.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setCardToDelete(null)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmDelete} className="bg-red-500 hover:bg-red-600">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       
       {/* AI Generator Dialog */}
       <Dialog open={showGenerator} onOpenChange={setShowGenerator}>
@@ -397,7 +536,7 @@ const Dashboard = () => {
   );
 };
 
-const FlashcardPreview = ({ card, onDelete }: { card: any; onDelete: () => void }) => {
+const FlashcardPreview = ({ card, onDelete }: { card: Flashcard; onDelete: () => void }) => {
   const [isHovering, setIsHovering] = useState(false);
   
   return (
@@ -424,10 +563,26 @@ const FlashcardPreview = ({ card, onDelete }: { card: any; onDelete: () => void 
         </div>
         
         <div className={`flex gap-1 transition-opacity duration-200 ${isHovering ? 'opacity-100' : 'opacity-0'}`}>
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8 w-8 p-0 rounded-full"
+            onClick={(e) => {
+              e.stopPropagation();
+              document.dispatchEvent(new CustomEvent('editFlashcard', { detail: card }));
+            }}
+          >
             <Edit className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full text-red-500" onClick={onDelete}>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8 w-8 p-0 rounded-full text-red-500" 
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete();
+            }}
+          >
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>
