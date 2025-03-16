@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
@@ -10,9 +9,10 @@ import { useFlashcards } from '@/context/FlashcardContext';
 import { useToast } from '@/components/ui/use-toast';
 import { 
   Plus, Search, Clock, LayoutGrid, Book, Trash2, Edit, 
-  Brain, ArrowRight, Filter, ListFilter, Calendar 
+  Brain, ArrowRight, Filter, ListFilter, Calendar, FileText 
 } from 'lucide-react';
 import FlashcardGenerator from '@/components/FlashcardGenerator';
+import PdfUploader from '@/components/PdfUploader';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -22,6 +22,7 @@ const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [showGenerator, setShowGenerator] = useState(false);
+  const [showPdfUploader, setShowPdfUploader] = useState(false);
   const [newCardFront, setNewCardFront] = useState('');
   const [newCardBack, setNewCardBack] = useState('');
   const [newCardCategory, setNewCardCategory] = useState('');
@@ -69,6 +70,15 @@ const Dashboard = () => {
     toast({
       title: "Flashcard deleted",
       description: "The flashcard has been removed from your collection."
+    });
+  };
+
+  const handlePdfFlashcardsGenerated = (flashcards: any[]) => {
+    addFlashcards(flashcards);
+    setShowPdfUploader(false);
+    toast({
+      title: "PDF Flashcards Added",
+      description: `${flashcards.length} flashcards were created from your PDF.`
     });
   };
 
@@ -124,6 +134,14 @@ const Dashboard = () => {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-3">
+              <Button 
+                variant="outline"
+                className="gap-2"
+                onClick={() => setShowPdfUploader(true)}
+              >
+                <FileText className="w-4 h-4" />
+                Import PDF
+              </Button>
               <Button 
                 variant="outline"
                 className="gap-2"
@@ -354,6 +372,24 @@ const Dashboard = () => {
           </DialogHeader>
           <div className="py-4">
             <FlashcardGenerator onFlashcardsGenerated={handleGeneratedFlashcards} />
+          </div>
+        </DialogContent>
+      </Dialog>
+      
+      {/* PDF Uploader Dialog */}
+      <Dialog open={showPdfUploader} onOpenChange={setShowPdfUploader}>
+        <DialogContent className="sm:max-w-5xl">
+          <DialogHeader>
+            <DialogTitle>Import PDF to Create Flashcards</DialogTitle>
+            <DialogDescription>
+              Upload a PDF to extract content and automatically generate flashcards.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <PdfUploader 
+              onExtractComplete={handlePdfFlashcardsGenerated} 
+              onClose={() => setShowPdfUploader(false)} 
+            />
           </div>
         </DialogContent>
       </Dialog>
