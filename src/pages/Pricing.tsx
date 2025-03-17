@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar';
 import PricingPlans from '@/components/PricingPlans';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle, Shield, CreditCard } from 'lucide-react';
 import { Helmet } from 'react-helmet';
 
 const Pricing = () => {
@@ -33,8 +33,35 @@ const Pricing = () => {
         {/* Pricing Plans */}
         <PricingPlans />
         
+        {/* Payment Security Section */}
+        <section className="py-16 px-4 bg-gray-50 dark:bg-gray-900/50">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="flex justify-center mb-6">
+              <Shield className="w-12 h-12 text-primary" />
+            </div>
+            <h2 className="text-2xl font-display font-bold mb-4">Secure Payments</h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
+              All transactions are processed securely through Stripe, a PCI-compliant payment processor trusted by millions of businesses worldwide.
+            </p>
+            <div className="flex justify-center gap-4 flex-wrap">
+              <div className="p-2 bg-white rounded-md shadow-sm">
+                <CreditCard className="w-8 h-8 text-gray-500" />
+              </div>
+              <div className="p-2 bg-white rounded-md shadow-sm">
+                <img src="https://cdn.worldvectorlogo.com/logos/visa-2.svg" alt="Visa" className="h-8 w-auto" />
+              </div>
+              <div className="p-2 bg-white rounded-md shadow-sm">
+                <img src="https://cdn.worldvectorlogo.com/logos/mastercard-2.svg" alt="Mastercard" className="h-8 w-auto" />
+              </div>
+              <div className="p-2 bg-white rounded-md shadow-sm">
+                <img src="https://cdn.worldvectorlogo.com/logos/american-express-2.svg" alt="American Express" className="h-8 w-auto" />
+              </div>
+            </div>
+          </div>
+        </section>
+        
         {/* FAQ Section */}
-        <section className="py-16 px-4 bg-gray-50 dark:bg-gray-900">
+        <section className="py-16 px-4 bg-white dark:bg-gray-900">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-display font-bold text-center mb-12">Frequently Asked Questions</h2>
             
@@ -47,6 +74,16 @@ const Pricing = () => {
               <FaqItem 
                 question="Can I upgrade or downgrade my plan anytime?"
                 answer="Yes! You can upgrade to Premium at any time. If you downgrade to the free plan, you'll maintain access to all your flashcards, but some premium features will no longer be available."
+              />
+              
+              <FaqItem 
+                question="How is my payment information secured?"
+                answer="We use Stripe for payment processing, which maintains the highest level of security certification in the payments industry. Your payment details are never stored on our servers."
+              />
+              
+              <FaqItem 
+                question="Is there a refund policy?"
+                answer="Yes, if you're not satisfied with your premium subscription, you can request a refund within 7 days of purchase. Contact our support team to process your refund."
               />
               
               <FaqItem 

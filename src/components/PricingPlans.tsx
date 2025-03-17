@@ -4,23 +4,63 @@ import { Check, Lock, Crown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
+import { stripePromise, createCheckoutSession } from '@/services/payment';
 
 const PricingPlans = () => {
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = React.useState<{[key: string]: boolean}>({
+    free: false,
+    premium: false
+  });
 
-  const handleSubscribe = (plan: string) => {
-    if (plan === 'premium') {
-      toast({
-        title: "Premium Plan Selected",
-        description: "This is a demo. In a real app, you would be redirected to payment.",
-        variant: "default",
-      });
-    } else {
+  const handleSubscribe = async (plan: string) => {
+    if (plan === 'free') {
       toast({
         title: "Free Plan Selected",
         description: "You're now using the free plan!",
         variant: "default",
       });
+      return;
+    }
+    
+    // For premium plan, initiate Stripe checkout
+    setIsLoading(prev => ({ ...prev, premium: true }));
+    
+    try {
+      // In a real app, this would be your actual price ID from Stripe
+      const priceId = 'price_1OxxxxxxxxxYOURPRICEID';
+      const session = await createCheckoutSession(priceId);
+      
+      // In a real implementation with a backend, you would redirect to the checkout URL
+      toast({
+        title: "Redirecting to Checkout",
+        description: "You'll be redirected to Stripe to complete your purchase.",
+        variant: "default",
+      });
+      
+      // Simulate a redirect to Stripe Checkout
+      // In production, you would use: window.location.href = session.url;
+      console.log(`Redirecting to: ${session.url}`);
+      
+      // For demo purposes, show a toast instead of actual redirect
+      setTimeout(() => {
+        toast({
+          title: "Demo Mode",
+          description: "In a real app, you would be on the Stripe checkout page now. Since this is a demo, we're just showing this message instead.",
+          variant: "default",
+          duration: 5000,
+        });
+        setIsLoading(prev => ({ ...prev, premium: false }));
+      }, 1500);
+      
+    } catch (error) {
+      console.error('Error subscribing to premium plan:', error);
+      toast({
+        title: "Error",
+        description: "There was a problem processing your subscription. Please try again.",
+        variant: "destructive",
+      });
+      setIsLoading(prev => ({ ...prev, premium: false }));
     }
   };
 
@@ -59,7 +99,11 @@ const PricingPlans = () => {
               </ul>
             </CardContent>
             <CardFooter>
-              <Button onClick={() => handleSubscribe('free')} className="w-full">
+              <Button 
+                onClick={() => handleSubscribe('free')} 
+                className="w-full"
+                disabled={isLoading.free}
+              >
                 Get Started
               </Button>
             </CardFooter>
@@ -97,8 +141,13 @@ const PricingPlans = () => {
               </ul>
             </CardContent>
             <CardFooter>
-              <Button variant="default" onClick={() => handleSubscribe('premium')} className="w-full bg-gradient-to-r from-primary to-accent hover:shadow-lg transition-all">
-                Upgrade to Premium
+              <Button 
+                variant="default" 
+                onClick={() => handleSubscribe('premium')} 
+                className="w-full bg-gradient-to-r from-primary to-accent hover:shadow-lg transition-all"
+                disabled={isLoading.premium}
+              >
+                {isLoading.premium ? 'Processing...' : 'Upgrade to Premium'}
               </Button>
             </CardFooter>
           </Card>
@@ -106,6 +155,7 @@ const PricingPlans = () => {
 
         <div className="text-center mt-12 text-sm text-gray-500 max-w-2xl mx-auto">
           <p>All plans include our core learning features. Premium unlocks additional capabilities to enhance your learning experience.</p>
+          <p className="mt-2">Payments are securely processed through Stripe.</p>
         </div>
       </div>
     </div>
