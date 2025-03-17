@@ -42,9 +42,9 @@ const Hero = () => {
                 Create Flashcards Now <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
-            <Link to="/study">
+            <Link to="/pricing">
               <Button size="lg" variant="outline" className="rounded-full px-8 border-2">
-                How It Works
+                View Pricing
               </Button>
             </Link>
           </div>

@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import Study from "./pages/Study";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import Pricing from "./pages/Pricing";
 import NotFound from "./pages/NotFound";
 import { Helmet } from "react-helmet";
 
@@ -57,6 +58,7 @@ const App = () => (
               <Route path="/study" element={<Study />} />
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
+              <Route path="/pricing" element={<Pricing />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
