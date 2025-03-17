@@ -12,8 +12,30 @@ import Study from "./pages/Study";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
+import { Helmet } from "react-helmet";
 
 const queryClient = new QueryClient();
+
+// JSON-LD structured data for better SEO
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Locnix.ai",
+  "description": "AI-powered flashcard platform for faster learning and better retention",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "All",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "AI-Generated Flashcards",
+    "Spaced Repetition",
+    "Performance Analytics",
+    "Collaborative Learning"
+  ]
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -22,6 +44,12 @@ const App = () => (
         <FlashcardProvider>
           <Toaster />
           <Sonner />
+          {/* Add Helmet for dynamic metadata and structured data */}
+          <Helmet>
+            <script type="application/ld+json">
+              {JSON.stringify(structuredData)}
+            </script>
+          </Helmet>
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />

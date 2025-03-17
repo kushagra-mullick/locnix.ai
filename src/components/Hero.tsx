@@ -22,24 +22,24 @@ const Hero = () => {
             AI-Powered Smart Flashcards
           </div>
 
-          {/* Main headline */}
+          {/* Main headline - optimized with H1 */}
           <h1 className="text-4xl md:text-6xl font-display font-bold tracking-tight max-w-3xl animate-slide-up" style={{ animationDelay: '0.1s' }}>
-            Learn Smarter, Not Harder with{' '}
+            Create Better Flashcards with{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
               Locnix.ai
             </span>
           </h1>
 
-          {/* Subtitle */}
+          {/* Subtitle - rich with keywords */}
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: '0.2s' }}>
-            Generate personalized flashcards with AI that adapts to your learning style. Study efficiently and remember more with our cutting-edge platform.
+            Generate personalized flashcards with our AI that adapts to your learning style. Study efficiently and remember more with spaced repetition, perfect for students, educators, and lifelong learners.
           </p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mt-8 animate-slide-up" style={{ animationDelay: '0.3s' }}>
             <Link to="/signup">
               <Button size="lg" className="rounded-full px-8 shadow-lg hover:shadow-xl transition-all gap-2">
-                Get Started <ArrowRight className="w-4 h-4" />
+                Create Flashcards Now <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
             <Link to="/study">
@@ -53,18 +53,18 @@ const Hero = () => {
           <div className="w-full max-w-3xl grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 animate-slide-up" style={{ animationDelay: '0.4s' }}>
             <StatCard
               icon={<Brain className="w-10 h-10 text-primary" />}
-              title="AI-Powered"
-              description="Generate perfect flashcards with our advanced AI"
+              title="AI-Generated Flashcards"
+              description="Create perfect flashcards automatically with our advanced AI technology"
             />
             <StatCard
               icon={<Zap className="w-10 h-10 text-amber-500" />}
               title="Learn Faster"
-              description="Optimize your study time with our smart algorithms"
+              description="Optimize your study time with our smart spaced repetition algorithms"
             />
             <StatCard
               icon={<Sparkles className="w-10 h-10 text-accent" />}
               title="Remember More"
-              description="Retain information longer with spaced repetition"
+              description="Retain information longer with scientifically-proven study techniques"
             />
           </div>
         </div>
