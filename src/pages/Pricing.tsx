@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar';
 import PricingPlans from '@/components/PricingPlans';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle, Shield, CreditCard } from 'lucide-react';
+import { ArrowRight, CheckCircle, Shield, CreditCard, Gift, BanknoteIcon } from 'lucide-react';
 import { Helmet } from 'react-helmet';
 
 const Pricing = () => {
@@ -41,20 +41,17 @@ const Pricing = () => {
             </div>
             <h2 className="text-2xl font-display font-bold mb-4">Secure Payments</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
-              All transactions are processed securely through Stripe, a PCI-compliant payment processor trusted by millions of businesses worldwide.
+              We offer multiple secure payment options suitable for all ages, including credit card payments, bank transfers, and gift card options.
             </p>
             <div className="flex justify-center gap-4 flex-wrap">
               <div className="p-2 bg-white rounded-md shadow-sm">
                 <CreditCard className="w-8 h-8 text-gray-500" />
               </div>
               <div className="p-2 bg-white rounded-md shadow-sm">
-                <img src="https://cdn.worldvectorlogo.com/logos/visa-2.svg" alt="Visa" className="h-8 w-auto" />
+                <Gift className="w-8 h-8 text-gray-500" />
               </div>
               <div className="p-2 bg-white rounded-md shadow-sm">
-                <img src="https://cdn.worldvectorlogo.com/logos/mastercard-2.svg" alt="Mastercard" className="h-8 w-auto" />
-              </div>
-              <div className="p-2 bg-white rounded-md shadow-sm">
-                <img src="https://cdn.worldvectorlogo.com/logos/american-express-2.svg" alt="American Express" className="h-8 w-auto" />
+                <BanknoteIcon className="w-8 h-8 text-gray-500" />
               </div>
             </div>
           </div>
@@ -78,12 +75,12 @@ const Pricing = () => {
               
               <FaqItem 
                 question="How is my payment information secured?"
-                answer="We use Stripe for payment processing, which maintains the highest level of security certification in the payments industry. Your payment details are never stored on our servers."
+                answer="We use industry-standard encryption and never store your complete payment details on our servers. All transactions are processed securely."
               />
               
               <FaqItem 
-                question="Is there a refund policy?"
-                answer="Yes, if you're not satisfied with your premium subscription, you can request a refund within 7 days of purchase. Contact our support team to process your refund."
+                question="I'm under 18, can I still get a premium plan?"
+                answer="Yes! We offer alternative payment options for younger users. You can have a parent or guardian complete the payment process, or use gift cards where available."
               />
               
               <FaqItem 

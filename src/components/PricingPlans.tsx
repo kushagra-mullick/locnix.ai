@@ -1,17 +1,30 @@
 
-import React from 'react';
-import { Check, Lock, Crown } from 'lucide-react';
+import React, { useState } from 'react';
+import { Check, Lock, Crown, CreditCard, ArrowRight, Gift } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
-import { stripePromise, createCheckoutSession } from '@/services/payment';
+import { stripePromise, createCheckoutSession, processAlternativePayment } from '@/services/payment';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const PricingPlans = () => {
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = React.useState<{[key: string]: boolean}>({
+  const [isLoading, setIsLoading] = useState<{[key: string]: boolean}>({
     free: false,
     premium: false
   });
+  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<'credit' | 'alternative'>('credit');
+  const [parentEmail, setParentEmail] = useState('');
 
   const handleSubscribe = async (plan: string) => {
     if (plan === 'free') {
@@ -23,43 +36,70 @@ const PricingPlans = () => {
       return;
     }
     
-    // For premium plan, initiate Stripe checkout
+    // For premium plan, show payment options
+    setShowPaymentDialog(true);
+  };
+  
+  const processPayment = async () => {
     setIsLoading(prev => ({ ...prev, premium: true }));
     
     try {
-      // In a real app, this would be your actual price ID from Stripe
-      const priceId = 'price_1OxxxxxxxxxYOURPRICEID';
-      const session = await createCheckoutSession(priceId);
-      
-      // In a real implementation with a backend, you would redirect to the checkout URL
-      toast({
-        title: "Redirecting to Checkout",
-        description: "You'll be redirected to Stripe to complete your purchase.",
-        variant: "default",
-      });
-      
-      // Simulate a redirect to Stripe Checkout
-      // In production, you would use: window.location.href = session.url;
-      console.log(`Redirecting to: ${session.url}`);
-      
-      // For demo purposes, show a toast instead of actual redirect
-      setTimeout(() => {
+      if (paymentMethod === 'credit') {
+        // In a real app, this would be your actual price ID from Stripe
+        const priceId = 'price_1OxxxxxxxxxYOURPRICEID';
+        const session = await createCheckoutSession(priceId);
+        
         toast({
-          title: "Demo Mode",
-          description: "In a real app, you would be on the Stripe checkout page now. Since this is a demo, we're just showing this message instead.",
+          title: "Redirecting to Checkout",
+          description: "You'll be redirected to complete your purchase.",
           variant: "default",
-          duration: 5000,
         });
-        setIsLoading(prev => ({ ...prev, premium: false }));
-      }, 1500);
-      
+        
+        // Simulate a redirect to Stripe Checkout
+        console.log(`Redirecting to: ${session.url}`);
+        
+        // For demo purposes, show a toast instead of actual redirect
+        setTimeout(() => {
+          toast({
+            title: "Demo Mode",
+            description: "In a real app, you would be on the checkout page now. Since this is a demo, we're just showing this message.",
+            variant: "default",
+            duration: 5000,
+          });
+          setIsLoading(prev => ({ ...prev, premium: false }));
+          setShowPaymentDialog(false);
+        }, 1500);
+      } else {
+        // Process alternative payment
+        const result = await processAlternativePayment('premium');
+        
+        if (result.success) {
+          toast({
+            title: "Alternative Payment Option Selected",
+            description: "We've sent instructions to complete payment to your parent/guardian.",
+            variant: "default",
+            duration: 5000,
+          });
+          
+          if (parentEmail) {
+            toast({
+              title: "Email Sent",
+              description: `Payment instructions sent to ${parentEmail}`,
+              variant: "default",
+            });
+          }
+          
+          setShowPaymentDialog(false);
+        }
+      }
     } catch (error) {
-      console.error('Error subscribing to premium plan:', error);
+      console.error('Error processing payment:', error);
       toast({
         title: "Error",
-        description: "There was a problem processing your subscription. Please try again.",
+        description: "There was a problem processing your request. Please try again.",
         variant: "destructive",
       });
+    } finally {
       setIsLoading(prev => ({ ...prev, premium: false }));
     }
   };
@@ -155,9 +195,77 @@ const PricingPlans = () => {
 
         <div className="text-center mt-12 text-sm text-gray-500 max-w-2xl mx-auto">
           <p>All plans include our core learning features. Premium unlocks additional capabilities to enhance your learning experience.</p>
-          <p className="mt-2">Payments are securely processed through Stripe.</p>
+          <p className="mt-2">Multiple payment methods available including bank transfer and gift cards.</p>
         </div>
       </div>
+      
+      {/* Payment Method Dialog */}
+      <Dialog open={showPaymentDialog} onOpenChange={setShowPaymentDialog}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Choose Payment Method</DialogTitle>
+            <DialogDescription>
+              Select how you'd like to pay for your Premium Plan.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  id="credit-card"
+                  name="payment-method"
+                  checked={paymentMethod === 'credit'}
+                  onChange={() => setPaymentMethod('credit')}
+                  className="h-4 w-4 border-gray-300 focus:ring-primary"
+                />
+                <Label htmlFor="credit-card" className="flex items-center gap-2 cursor-pointer">
+                  <CreditCard className="h-4 w-4" /> Credit Card (18+ or with parent permission)
+                </Label>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  id="alternative"
+                  name="payment-method"
+                  checked={paymentMethod === 'alternative'}
+                  onChange={() => setPaymentMethod('alternative')}
+                  className="h-4 w-4 border-gray-300 focus:ring-primary"
+                />
+                <Label htmlFor="alternative" className="flex items-center gap-2 cursor-pointer">
+                  <Gift className="h-4 w-4" /> Parent/Guardian Payment
+                </Label>
+              </div>
+              
+              {paymentMethod === 'alternative' && (
+                <div className="pt-2">
+                  <Label htmlFor="parent-email">Parent/Guardian Email (optional)</Label>
+                  <Input
+                    id="parent-email"
+                    type="email"
+                    placeholder="parent@example.com"
+                    value={parentEmail}
+                    onChange={(e) => setParentEmail(e.target.value)}
+                    className="mt-1"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    We'll send payment instructions to this email.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowPaymentDialog(false)}>
+              Cancel
+            </Button>
+            <Button onClick={processPayment} disabled={isLoading.premium}>
+              {isLoading.premium ? "Processing..." : "Continue"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

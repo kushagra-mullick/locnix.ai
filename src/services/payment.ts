@@ -6,6 +6,26 @@ const STRIPE_PUBLISHABLE_KEY = 'pk_test_51YOURSTRIPEKEY';
 
 export const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 
+// Alternative payment methods for users who can't use Stripe
+export const processAlternativePayment = async (plan: string) => {
+  try {
+    console.log(`Processing alternative payment for plan: ${plan}`);
+    
+    // Simulate payment processing
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    return {
+      success: true,
+      id: `payment_${Math.random().toString(36).substring(2, 15)}`,
+      message: 'Your parent/guardian can complete the payment via bank transfer or gift card redemption',
+      instructionsUrl: 'https://example.com/payment-instructions'
+    };
+  } catch (error) {
+    console.error('Error processing alternative payment:', error);
+    throw error;
+  }
+};
+
 export const createCheckoutSession = async (priceId: string) => {
   try {
     // In a real implementation, this would call your backend API to create a Stripe Checkout session
