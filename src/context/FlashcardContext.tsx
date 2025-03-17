@@ -1,56 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-
-export interface Flashcard {
-  id: string;
-  front: string;
-  back: string;
-  category?: string;
-  dateCreated: Date;
-  lastReviewed?: Date;
-  difficulty?: 'easy' | 'medium' | 'hard';
-  nextReviewDate?: Date;
-}
-
-interface FlashcardContextType {
-  flashcards: Flashcard[];
-  addFlashcard: (flashcard: Omit<Flashcard, 'id' | 'dateCreated'>) => void;
-  addFlashcards: (flashcards: Omit<Flashcard, 'id' | 'dateCreated'>[]) => void;
-  updateFlashcard: (id: string, flashcard: Partial<Flashcard>) => void;
-  deleteFlashcard: (id: string) => void;
-  getFlashcard: (id: string) => Flashcard | undefined;
-  getFlashcardsForStudy: (count?: number) => Flashcard[];
-  rateFlashcard: (id: string, difficulty: 'easy' | 'medium' | 'hard') => void;
-}
+import { Flashcard, FlashcardContextType } from '../types/flashcard';
+import { sampleFlashcards } from '../data/sampleFlashcards';
+import { calculateNextReviewDate } from '../utils/flashcardUtils';
 
 const FlashcardContext = createContext<FlashcardContextType | undefined>(undefined);
-
-// Sample flashcard data for demonstration
-const sampleFlashcards: Flashcard[] = [
-  {
-    id: 'sample-1',
-    front: 'What is the capital of France?',
-    back: 'Paris is the capital of France.',
-    category: 'Geography',
-    dateCreated: new Date(),
-    difficulty: 'easy'
-  },
-  {
-    id: 'sample-2',
-    front: 'What is the formula for water?',
-    back: 'H₂O (two hydrogen atoms and one oxygen atom)',
-    category: 'Chemistry',
-    dateCreated: new Date(),
-    difficulty: 'medium'
-  },
-  {
-    id: 'sample-3',
-    front: 'What year did World War II end?',
-    back: '1945',
-    category: 'History',
-    dateCreated: new Date(),
-    difficulty: 'medium'
-  }
-];
 
 export const FlashcardProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
@@ -115,22 +68,6 @@ export const FlashcardProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const getFlashcard = (id: string) => {
     return flashcards.find(card => card.id === id);
-  };
-
-  // Simple spaced repetition implementation
-  const calculateNextReviewDate = (difficulty: 'easy' | 'medium' | 'hard'): Date => {
-    const now = new Date();
-    
-    switch (difficulty) {
-      case 'easy':
-        return new Date(now.setDate(now.getDate() + 7)); // Review in 7 days
-      case 'medium':
-        return new Date(now.setDate(now.getDate() + 3)); // Review in 3 days
-      case 'hard':
-        return new Date(now.setDate(now.getDate() + 1)); // Review in 1 day
-      default:
-        return new Date(now.setDate(now.getDate() + 3));
-    }
   };
 
   const rateFlashcard = (id: string, difficulty: 'easy' | 'medium' | 'hard') => {
@@ -202,3 +139,6 @@ export const useFlashcards = () => {
   }
   return context;
 };
+
+// Re-export the Flashcard interface to maintain backward compatibility
+export type { Flashcard };

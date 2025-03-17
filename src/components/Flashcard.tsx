@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Sparkles, RefreshCw, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import type { Flashcard as FlashcardType } from '@/types/flashcard';
 
 export interface FlashcardProps {
   id: string;
