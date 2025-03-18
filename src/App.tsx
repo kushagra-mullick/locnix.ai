@@ -11,7 +11,8 @@ import Dashboard from "./pages/Dashboard";
 import Study from "./pages/Study";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
-import Pricing from "./pages/Pricing";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 import { Helmet } from "react-helmet";
 
@@ -25,11 +26,6 @@ const structuredData = {
   "description": "AI-powered flashcard platform for faster learning and better retention",
   "applicationCategory": "EducationalApplication",
   "operatingSystem": "All",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
   "featureList": [
     "AI-Generated Flashcards",
     "Spaced Repetition",
@@ -58,7 +54,8 @@ const App = () => (
               <Route path="/study" element={<Study />} />
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
-              <Route path="/pricing" element={<Pricing />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/privacy" element={<Privacy />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

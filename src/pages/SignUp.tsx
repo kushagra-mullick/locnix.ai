@@ -11,6 +11,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import Navbar from '@/components/Navbar';
+import { useAuth } from '@/context/AuthContext';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
@@ -24,7 +25,9 @@ const formSchema = z.object({
 const SignUp = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,13 +40,17 @@ const SignUp = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsLoading(true);
     try {
-      // In a real app, this would call an API to create a user
+      // In a real app, this would use the Supabase authentication
+      // For now, we'll simulate a successful signup
       console.log("Sign up with:", values);
       
-      // Simulate successful registration
-      localStorage.setItem('isAuthenticated', 'true');
-      localStorage.setItem('user', JSON.stringify({ name: values.name, email: values.email }));
+      // Simulate successful registration with a delay
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      // Use the login function from AuthContext
+      login({ name: values.name, email: values.email });
       
       toast({
         title: "Account created!",
@@ -57,6 +64,8 @@ const SignUp = () => {
         title: "Sign up failed",
         description: "There was a problem creating your account.",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -162,8 +171,16 @@ const SignUp = () => {
                     )}
                   />
                   
-                  <Button type="submit" className="w-full" size="lg">
-                    <UserPlus className="mr-2 h-4 w-4" /> Create Account
+                  <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+                    {isLoading ? (
+                      <>
+                        <span className="animate-spin mr-2">◌</span> Creating Account...
+                      </>
+                    ) : (
+                      <>
+                        <UserPlus className="mr-2 h-4 w-4" /> Create Account
+                      </>
+                    )}
                   </Button>
                 </form>
               </Form>

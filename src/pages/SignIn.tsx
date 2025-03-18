@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import Navbar from '@/components/Navbar';
+import { useAuth } from '@/context/AuthContext';
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -19,7 +20,9 @@ const formSchema = z.object({
 const SignIn = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -30,13 +33,17 @@ const SignIn = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsLoading(true);
     try {
-      // In a real app, this would call an authentication API
+      // In a real app, this would use the Supabase authentication
+      // For now, we'll simulate a successful login
       console.log("Sign in with:", values);
       
-      // Simulate successful login
-      localStorage.setItem('isAuthenticated', 'true');
-      localStorage.setItem('user', JSON.stringify({ email: values.email }));
+      // Simulate successful login with a delay
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      // Use the login function from AuthContext
+      login({ email: values.email });
       
       toast({
         title: "Success!",
@@ -50,6 +57,8 @@ const SignIn = () => {
         title: "Sign in failed",
         description: "Please check your credentials and try again.",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -113,8 +122,16 @@ const SignIn = () => {
                     )}
                   />
                   
-                  <Button type="submit" className="w-full" size="lg">
-                    <LogIn className="mr-2 h-4 w-4" /> Sign In
+                  <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+                    {isLoading ? (
+                      <>
+                        <span className="animate-spin mr-2">◌</span> Signing in...
+                      </>
+                    ) : (
+                      <>
+                        <LogIn className="mr-2 h-4 w-4" /> Sign In
+                      </>
+                    )}
                   </Button>
                 </form>
               </Form>
@@ -131,6 +148,17 @@ const SignIn = () => {
                     Forgot your password?
                   </Link>
                 </p>
+              </div>
+              
+              <div className="text-xs text-gray-400 dark:text-gray-500 mt-8">
+                By signing in, you agree to our{" "}
+                <Link to="/terms" className="underline hover:text-gray-600 dark:hover:text-gray-300">
+                  Terms of Service
+                </Link>{" "}
+                and{" "}
+                <Link to="/privacy" className="underline hover:text-gray-600 dark:hover:text-gray-300">
+                  Privacy Policy
+                </Link>
               </div>
             </div>
           </div>
