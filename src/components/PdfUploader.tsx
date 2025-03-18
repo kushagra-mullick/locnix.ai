@@ -18,6 +18,7 @@ const PdfUploader: React.FC<PdfUploaderProps> = ({ onExtractComplete, onClose })
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [extractedText, setExtractedText] = useState<string>('');
+  const [usefulContent, setUsefulContent] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
@@ -49,9 +50,34 @@ const PdfUploader: React.FC<PdfUploaderProps> = ({ onExtractComplete, onClose })
     }
   };
 
+  // Helper function to check if a text segment is likely useful content
+  const isUsefulContent = (text: string): boolean => {
+    // Ignore very short segments
+    if (text.length < 20) return false;
+    
+    // Ignore headers, footers, page numbers, etc.
+    if (/^page \d+$/i.test(text.trim())) return false;
+    if (/^\d+$/.test(text.trim())) return false;
+    
+    // Ignore navigation elements, URLs, email addresses
+    if (/^(http|www|mailto|@)/.test(text.trim())) return false;
+    
+    // Ignore lines that are likely metadata or formatting
+    if (/^(title:|author:|date:|copyright|all rights reserved)/i.test(text.trim())) return false;
+    
+    // A real content line probably has some sentence structure
+    const hasSentenceStructure = /[A-Z][^.!?]*[.!?]/.test(text);
+    
+    // Ensure content is meaningful (has some alphabetical chars and not just symbols)
+    const hasMeaningfulContent = /[a-zA-Z]{3,}/.test(text) && text.trim().split(' ').length > 3;
+    
+    return hasSentenceStructure && hasMeaningfulContent;
+  };
+
   const extractTextFromPdf = async (pdfFile: File) => {
     setIsLoading(true);
     setExtractedText('');
+    setUsefulContent([]);
     setProgress(0);
     
     try {
@@ -59,19 +85,50 @@ const PdfUploader: React.FC<PdfUploaderProps> = ({ onExtractComplete, onClose })
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
       const totalPages = pdf.numPages;
       let fullText = '';
+      let potentialFlashcardContent: string[] = [];
       
       for (let i = 1; i <= totalPages; i++) {
         const page = await pdf.getPage(i);
         const textContent = await page.getTextContent();
-        const pageText = textContent.items
+        
+        let pageText = textContent.items
           .map((item: any) => item.str)
           .join(' ');
         
         fullText += pageText + '\n\n';
+        
+        // Split the text into paragraphs and filter for useful content
+        const paragraphs = pageText.split(/\n{2,}/)
+          .filter(para => para.trim().length > 0);
+        
+        // Process each paragraph to identify useful content
+        paragraphs.forEach(paragraph => {
+          // Split into sentences
+          const sentences = paragraph.split(/(?<=[.!?])\s+/)
+            .filter(sentence => sentence.trim().length > 0);
+          
+          sentences.forEach(sentence => {
+            if (isUsefulContent(sentence)) {
+              potentialFlashcardContent.push(sentence.trim());
+            }
+          });
+        });
+        
         setProgress(Math.round((i / totalPages) * 100));
       }
       
+      // Remove duplicates and very similar content
+      const uniqueContent = Array.from(new Set(potentialFlashcardContent));
+      
       setExtractedText(fullText);
+      setUsefulContent(uniqueContent);
+      
+      toast({
+        title: "Content extracted",
+        description: `Found ${uniqueContent.length} potential flashcard concepts in your PDF.`,
+        variant: "default"
+      });
+      
     } catch (error) {
       console.error('Error extracting text from PDF:', error);
       toast({
@@ -88,6 +145,7 @@ const PdfUploader: React.FC<PdfUploaderProps> = ({ onExtractComplete, onClose })
     setFile(null);
     setPreviewUrl(null);
     setExtractedText('');
+    setUsefulContent([]);
     setProgress(0);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -95,39 +153,47 @@ const PdfUploader: React.FC<PdfUploaderProps> = ({ onExtractComplete, onClose })
   };
 
   const processPdfContent = async () => {
-    if (!extractedText) return;
+    if (usefulContent.length === 0) return;
     
     setIsProcessing(true);
     
     try {
-      // In a real application, this would be an API call to an AI service
-      // Here we're simulating the AI processing with a timeout and simple text analysis
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Simple simulation of AI-generated flashcards from text
-      const sentences = extractedText
-        .split(/[.!?]/)
-        .filter(sentence => sentence.trim().length > 20)
-        .slice(0, 10);
-      
-      const generatedFlashcards = sentences.map((sentence, index) => {
-        // Simple logic to extract a question from the sentence
-        const words = sentence.trim().split(' ');
-        const half = Math.floor(words.length / 2);
-        
-        const front = words.slice(0, half).join(' ') + '...?';
-        const back = sentence.trim();
-        
-        const categories = ['PDF Extract', 'Auto-Generated'];
-        const randomCategory = categories[Math.floor(Math.random() * categories.length)];
-        
-        return {
-          front,
-          back,
-          category: randomCategory,
-          difficulty: Math.random() > 0.7 ? 'hard' : Math.random() > 0.4 ? 'medium' : 'easy'
-        } as Omit<Flashcard, 'id' | 'dateCreated' | 'lastReviewed' | 'nextReviewDate'>;
-      });
+      // Generate flashcards from the useful content
+      const generatedFlashcards = usefulContent
+        .slice(0, Math.min(usefulContent.length, 20)) // Limit to 20 flashcards max
+        .map((content) => {
+          // For each content piece, create a question-answer pair
+          
+          // Method 1: For definition-like content, use "What is X?" format
+          const definitionMatch = content.match(/([^.,:;]+)(?:is|are|refers to|means|defined as)([^.]*\.)/i);
+          
+          // Method 2: For fact-based content, use the content as answer and create a question
+          const words = content.trim().split(' ');
+          const keyTerms = words.filter(word => word.length > 4).slice(0, 3);
+          const termsQuestion = `What ${
+            content.includes(" is ") ? "is" : "are"
+          } the key points about ${keyTerms.join(", ")}?`;
+          
+          let front, back;
+          
+          if (definitionMatch && definitionMatch[1] && definitionMatch[2]) {
+            // If it looks like a definition, format accordingly
+            const term = definitionMatch[1].trim();
+            front = `What is ${term}?`;
+            back = content;
+          } else {
+            // Otherwise use the content-based question
+            front = termsQuestion;
+            back = content;
+          }
+          
+          return {
+            front,
+            back,
+            category: 'PDF Extract',
+            difficulty: 'medium'
+          } as Omit<Flashcard, 'id' | 'dateCreated' | 'lastReviewed' | 'nextReviewDate'>;
+        });
       
       onExtractComplete(generatedFlashcards);
       
@@ -186,7 +252,7 @@ const PdfUploader: React.FC<PdfUploaderProps> = ({ onExtractComplete, onClose })
         
         <Button
           onClick={processPdfContent}
-          disabled={!extractedText || isProcessing}
+          disabled={usefulContent.length === 0 || isProcessing}
           className="gap-2"
         >
           {isProcessing ? (
@@ -218,7 +284,7 @@ const PdfUploader: React.FC<PdfUploaderProps> = ({ onExtractComplete, onClose })
             </CardContent>
           </Card>
           
-          {/* Extracted Text Preview */}
+          {/* Extracted Text Preview - Now showing useful content only */}
           <Card className="glass-card overflow-hidden h-96">
             <CardContent className="p-4 h-full overflow-auto">
               {isLoading ? (
@@ -232,16 +298,25 @@ const PdfUploader: React.FC<PdfUploaderProps> = ({ onExtractComplete, onClose })
                   </div>
                   <p className="text-sm text-gray-500">Extracting text: {progress}%</p>
                 </div>
-              ) : extractedText ? (
+              ) : usefulContent.length > 0 ? (
                 <div>
-                  <h3 className="font-medium mb-2">Extracted Text</h3>
-                  <div className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-line">
-                    {extractedText}
+                  <h3 className="font-medium mb-2">Extracted Concepts ({usefulContent.length})</h3>
+                  <div className="text-sm text-gray-600 dark:text-gray-300">
+                    {usefulContent.map((content, index) => (
+                      <div key={index} className="p-2 border-b border-gray-200 dark:border-gray-700">
+                        {content}
+                      </div>
+                    ))}
                   </div>
+                </div>
+              ) : extractedText ? (
+                <div className="h-full flex flex-col items-center justify-center text-gray-400">
+                  <p>No useful content detected in this PDF.</p>
+                  <p className="text-xs mt-2">Try a different PDF with more textual content.</p>
                 </div>
               ) : (
                 <div className="h-full flex items-center justify-center text-gray-400">
-                  <p>Extracted text will appear here</p>
+                  <p>Extracted concepts will appear here</p>
                 </div>
               )}
             </CardContent>
