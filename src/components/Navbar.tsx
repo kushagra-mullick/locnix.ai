@@ -65,7 +65,6 @@ const Navbar = () => {
           <NavItem to="/" label="Home" currentPath={location.pathname} />
           <NavItem to="/dashboard" label="Dashboard" currentPath={location.pathname} />
           <NavItem to="/study" label="Study" currentPath={location.pathname} />
-          <NavItem to="/pricing" label="Pricing" currentPath={location.pathname} />
           
           {isAuthenticated ? (
             <div className="ml-4">
@@ -124,7 +123,6 @@ const Navbar = () => {
             <MobileNavItem to="/" label="Home" currentPath={location.pathname} />
             <MobileNavItem to="/dashboard" label="Dashboard" currentPath={location.pathname} />
             <MobileNavItem to="/study" label="Study" currentPath={location.pathname} />
-            <MobileNavItem to="/pricing" label="Pricing" currentPath={location.pathname} />
             
             {isAuthenticated ? (
               <>
