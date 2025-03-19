@@ -572,7 +572,7 @@ const FlashcardPreview = ({ card, onDelete }: { card: Flashcard; onDelete: () =>
           Created {new Date(card.dateCreated).toLocaleDateString()}
         </div>
         
-        <div className={`flex gap-1 transition-opacity duration-200 ${isHovering ? 'opacity-100' : 'opacity-0'}`}>
+        <div className="flex gap-1">
           <Button 
             variant="ghost" 
             size="sm" 
@@ -604,7 +604,18 @@ const FlashcardPreview = ({ card, onDelete }: { card: Flashcard; onDelete: () =>
       }`}>
         <div className="font-medium text-sm text-gray-500 mb-2">Answer:</div>
         <p className="line-clamp-5 text-sm">{card.back}</p>
-        <div className="mt-auto pt-4 flex justify-end">
+        <div className="mt-auto pt-4 flex justify-between items-center">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8 w-8 p-0 rounded-full text-red-500"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete();
+            }}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
           <Button variant="ghost" size="sm" className="h-8 gap-1 text-primary">
             View Details
             <ArrowRight className="h-3 w-3" />
