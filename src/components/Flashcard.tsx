@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Sparkles, RefreshCw, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { Sparkles, RefreshCw, ThumbsUp, ThumbsDown, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Flashcard as FlashcardType } from '@/types/flashcard';
 
@@ -13,9 +13,10 @@ export interface FlashcardProps {
   category?: string;
   difficulty?: 'easy' | 'medium' | 'hard';
   onRate?: (id: string, rating: 'easy' | 'medium' | 'hard') => void;
+  onDelete?: (id: string) => void;
 }
 
-const Flashcard = ({ id, front, back, category, difficulty, onRate }: FlashcardProps) => {
+const Flashcard = ({ id, front, back, category, difficulty, onRate, onDelete }: FlashcardProps) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -31,6 +32,13 @@ const Flashcard = ({ id, front, back, category, difficulty, onRate }: FlashcardP
   const handleRate = (rating: 'easy' | 'medium' | 'hard') => {
     if (onRate) {
       onRate(id, rating);
+    }
+  };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onDelete) {
+      onDelete(id);
     }
   };
 
@@ -62,6 +70,18 @@ const Flashcard = ({ id, front, back, category, difficulty, onRate }: FlashcardP
                 {category}
               </div>
             )}
+            
+            {onDelete && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="absolute top-4 right-4 h-8 w-8 p-0 rounded-full text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={handleDelete}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            )}
+            
             <div className="w-full h-full flex items-center justify-center">
               <p className="text-2xl font-semibold text-center px-8">{front}</p>
             </div>
@@ -75,17 +95,31 @@ const Flashcard = ({ id, front, back, category, difficulty, onRate }: FlashcardP
             <div className="w-full h-full flex items-center justify-center">
               <p className="text-xl text-center px-8">{back}</p>
             </div>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="absolute bottom-4 right-4 h-8 w-8 p-0 rounded-full"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleFlip();
-              }}
-            >
-              <RefreshCw className="h-4 w-4" />
-            </Button>
+            
+            <div className="absolute top-4 right-4 flex gap-2">
+              {onDelete && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-8 w-8 p-0 rounded-full text-red-500"
+                  onClick={handleDelete}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              )}
+              
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-8 w-8 p-0 rounded-full"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleFlip();
+                }}
+              >
+                <RefreshCw className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>

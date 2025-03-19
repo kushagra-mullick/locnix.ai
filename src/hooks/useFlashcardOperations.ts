@@ -25,11 +25,16 @@ export const useFlashcardOperations = () => {
     flashcardContext.rateFlashcard(id, difficulty);
   };
   
+  const deleteFlashcard = (id: string) => {
+    flashcardContext.deleteFlashcard(id);
+  };
+  
   return {
     ...flashcardContext,
     createFlashcard,
     createFlashcardsFromBatch,
     studySession,
-    recordFlashcardRating
+    recordFlashcardRating,
+    deleteFlashcard
   };
 };
