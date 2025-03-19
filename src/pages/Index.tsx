@@ -131,7 +131,7 @@ const Index = () => {
             <div>
               <h3 className="font-semibold text-lg mb-4">Contact</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                <li>support@locnix.ai</li>
+                <li>dev.locnixai@gmail.com</li>
               </ul>
             </div>
           </div>
