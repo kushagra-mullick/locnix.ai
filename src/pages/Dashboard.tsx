@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,11 +7,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { useFlashcards } from '@/context/FlashcardContext';
 import { useToast } from '@/hooks/use-toast';
-import { useFlashcardOperations } from '@/hooks/useFlashcardOperations';
 import { 
   Plus, Search, Clock, LayoutGrid, Book, Trash2, Edit, 
   Brain, ArrowRight, Filter, ListFilter, Calendar, FileText,
-  AlertCircle, Download, Upload
+  AlertCircle
 } from 'lucide-react';
 import FlashcardGenerator from '@/components/FlashcardGenerator';
 import PdfUploader from '@/components/PdfUploader';
@@ -28,17 +27,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Flashcard } from '@/types/flashcard';
+import { Flashcard } from '@/context/FlashcardContext';
 
 const Dashboard = () => {
   const { flashcards, addFlashcard, addFlashcards, deleteFlashcard, updateFlashcard } = useFlashcards();
-  const { exportFlashcards, importFlashcards } = useFlashcardOperations();
   const [searchQuery, setSearchQuery] = useState('');
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [showGenerator, setShowGenerator] = useState(false);
   const [showPdfUploader, setShowPdfUploader] = useState(false);
-  const [showImportDialog, setShowImportDialog] = useState(false);
-  const [importText, setImportText] = useState('');
   const [newCardFront, setNewCardFront] = useState('');
   const [newCardBack, setNewCardBack] = useState('');
   const [newCardCategory, setNewCardCategory] = useState('');
@@ -46,7 +42,6 @@ const Dashboard = () => {
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [cardToDelete, setCardToDelete] = useState<string | null>(null);
   const { toast } = useToast();
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleAddFlashcard = () => {
     if (!newCardFront.trim() || !newCardBack.trim()) {
@@ -146,75 +141,6 @@ const Dashboard = () => {
     });
   };
 
-  // New function to handle file import
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      try {
-        const fileContent = event.target?.result as string;
-        const result = importFlashcards(fileContent);
-        
-        if (result.success) {
-          toast({
-            title: "Import Successful",
-            description: result.message
-          });
-        } else {
-          toast({
-            title: "Import Failed",
-            description: result.message,
-            variant: "destructive"
-          });
-        }
-      } catch (error) {
-        toast({
-          title: "Import Failed",
-          description: "Failed to read the file content.",
-          variant: "destructive"
-        });
-      }
-      
-      // Reset the file input
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-    };
-    
-    reader.readAsText(file);
-  };
-
-  // New function to handle text import
-  const handleImportFromText = () => {
-    if (!importText.trim()) {
-      toast({
-        title: "Import Failed",
-        description: "Please paste valid JSON content.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    const result = importFlashcards(importText);
-    
-    if (result.success) {
-      toast({
-        title: "Import Successful",
-        description: result.message
-      });
-      setImportText('');
-      setShowImportDialog(false);
-    } else {
-      toast({
-        title: "Import Failed",
-        description: result.message,
-        variant: "destructive"
-      });
-    }
-  };
-
   const filteredFlashcards = flashcards.filter(card => 
     card.front.toLowerCase().includes(searchQuery.toLowerCase()) || 
     card.back.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -280,38 +206,6 @@ const Dashboard = () => {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-3">
-              {/* Hidden file input for import */}
-              <input 
-                type="file" 
-                ref={fileInputRef}
-                className="hidden" 
-                accept=".json"
-                onChange={handleFileUpload}
-              />
-              <Button 
-                variant="outline"
-                className="gap-2"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <Upload className="w-4 h-4" />
-                Import File
-              </Button>
-              <Button 
-                variant="outline"
-                className="gap-2"
-                onClick={() => setShowImportDialog(true)}
-              >
-                <Upload className="w-4 h-4" />
-                Import Text
-              </Button>
-              <Button 
-                variant="outline"
-                className="gap-2"
-                onClick={exportFlashcards}
-              >
-                <Download className="w-4 h-4" />
-                Export
-              </Button>
               <Button 
                 variant="outline"
                 className="gap-2"
@@ -646,50 +540,6 @@ const Dashboard = () => {
               onClose={() => setShowPdfUploader(false)} 
             />
           </div>
-        </DialogContent>
-      </Dialog>
-      
-      {/* Import Text Dialog */}
-      <Dialog open={showImportDialog} onOpenChange={setShowImportDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Import Flashcards from Text</DialogTitle>
-            <DialogDescription>
-              Paste JSON formatted flashcard data below.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="import-text">JSON Data</Label>
-              <Textarea 
-                id="import-text" 
-                placeholder='[{"front": "Question", "back": "Answer", "category": "Optional"}]'
-                value={importText}
-                onChange={e => setImportText(e.target.value)}
-                className="min-h-[200px]"
-              />
-            </div>
-            <div className="text-sm text-gray-500">
-              <p>Expected format:</p>
-              <pre className="bg-gray-100 dark:bg-gray-800 p-2 rounded text-xs overflow-auto mt-1">
-                {`[
-  { 
-    "front": "Question text", 
-    "back": "Answer text",
-    "category": "Optional category"
-  }
-]`}
-              </pre>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowImportDialog(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleImportFromText}>
-              Import
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
