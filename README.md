@@ -1,7 +1,7 @@
 
 # Locnix.ai - AI-Powered Flashcard Platform
 
-![Locnix.ai Logo](/public/og-image.png)
+![Locnix.ai Logo](/public/locnixai.png)
 
 ## About Locnix.ai
 
@@ -18,7 +18,7 @@ Locnix.ai is an innovative flashcard platform that leverages artificial intellig
 
 ## Getting Started
 
-Visit [Locnix.ai](https://locnix.ai) to create your account and start generating flashcards today.
+Visit [Locnix.ai](https://locnixai.netlify.app) to create your account and start generating flashcards today.
 
 ## Technology Stack
 
@@ -41,4 +41,4 @@ Locnix.ai is licensed under the MIT License.
 
 - Email: support@locnix.ai
 - Twitter: [@locnixai](https://twitter.com/locnixai)
-- GitHub: [github.com/locnixai](https://github.com/locnixai)
+- GitHub: [github.com/locnixai](https://github.com/locnix.ai)
