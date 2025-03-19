@@ -4,8 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
-import { ArrowRightCircle, Brain, Loader2 } from 'lucide-react';
+import { ArrowRightCircle, Brain, Loader2, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 interface GeneratedFlashcard {
   id: string;
@@ -18,13 +19,12 @@ interface FlashcardGeneratorProps {
   onFlashcardsGenerated?: (flashcards: GeneratedFlashcard[]) => void;
 }
 
-const API_KEY = "sk-your-key"; // This is a placeholder. In production, use environment variables.
-
 const FlashcardGenerator = ({ onFlashcardsGenerated }: FlashcardGeneratorProps) => {
   const [inputText, setInputText] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
   const [apiKey, setApiKey] = useState('');
+  const [apiError, setApiError] = useState<string | null>(null);
   const { toast } = useToast();
   
   const generateFlashcards = async () => {
@@ -39,6 +39,7 @@ const FlashcardGenerator = ({ onFlashcardsGenerated }: FlashcardGeneratorProps) 
     
     setIsGenerating(true);
     setGenerationProgress(0);
+    setApiError(null);
     
     try {
       // Simulate progress while waiting for API response
@@ -59,10 +60,30 @@ const FlashcardGenerator = ({ onFlashcardsGenerated }: FlashcardGeneratorProps) 
         Text: ${inputText}
       `;
       
-      // Use either the user-provided API key or the default one
-      const keyToUse = apiKey || API_KEY;
+      // Determine which API key to use
+      let keyToUse = apiKey.trim();
       
-      // Make the API call to generate flashcards
+      if (!keyToUse) {
+        // Generate mock flashcards if no API key is provided
+        clearInterval(progressInterval);
+        setGenerationProgress(100);
+        
+        // Generate smart mock flashcards based on input text
+        const mockFlashcards = generateMockFlashcards(inputText);
+        
+        if (onFlashcardsGenerated) {
+          onFlashcardsGenerated(mockFlashcards);
+        }
+        
+        toast({
+          title: "Using AI simulation",
+          description: "No valid API key provided. Generated simulated flashcards instead."
+        });
+        
+        return;
+      }
+      
+      // Make the API call with the provided key
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -88,7 +109,17 @@ const FlashcardGenerator = ({ onFlashcardsGenerated }: FlashcardGeneratorProps) 
       clearInterval(progressInterval);
       
       if (!response.ok) {
-        throw new Error(`API request failed with status ${response.status}`);
+        const errorData = await response.json();
+        let errorMessage = `API request failed with status ${response.status}`;
+        
+        if (response.status === 429) {
+          errorMessage = "API rate limit exceeded. Please try with a different API key or use the simulated mode.";
+        } else if (errorData?.error?.message) {
+          errorMessage = errorData.error.message;
+        }
+        
+        setApiError(errorMessage);
+        throw new Error(errorMessage);
       }
       
       const data = await response.json();
@@ -126,36 +157,58 @@ const FlashcardGenerator = ({ onFlashcardsGenerated }: FlashcardGeneratorProps) 
         description: `Successfully created ${flashcardsWithIds.length} flashcards.`
       });
       
-      // If we're in development mode without a real API key, fall back to mock data
-      if (keyToUse === "sk-your-key") {
-        const mockFlashcards: GeneratedFlashcard[] = Array.from({ length: 5 }).map((_, i) => ({
-          id: `card-${Date.now()}-${i}`,
-          front: `What is concept ${i + 1} from your text?`,
-          back: `This is the explanation for concept ${i + 1}.`,
-          category: ['Concept', 'Definition', 'Process', 'Example', 'Fact'][Math.floor(Math.random() * 5)]
-        }));
-        
-        if (onFlashcardsGenerated) {
-          onFlashcardsGenerated(mockFlashcards);
-        }
-        
-        toast({
-          title: "Using mock data",
-          description: "No API key provided. Generated mock flashcards instead."
-        });
-      }
-      
     } catch (error) {
       console.error('Error generating flashcards:', error);
+      
+      // If there was an API error, generate mock flashcards as a fallback
+      const mockFlashcards = generateMockFlashcards(inputText);
+      
+      if (onFlashcardsGenerated) {
+        onFlashcardsGenerated(mockFlashcards);
+      }
+      
       toast({
-        title: "Generation failed",
-        description: error instanceof Error ? error.message : "An unexpected error occurred",
+        title: "Generation fallback",
+        description: "Switched to AI simulation mode due to API issues.",
         variant: "destructive"
       });
     } finally {
       setIsGenerating(false);
       setInputText('');
     }
+  };
+  
+  // Helper function to generate smart mock flashcards from input text
+  const generateMockFlashcards = (text: string): GeneratedFlashcard[] => {
+    // Split the text into sentences
+    const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 20);
+    
+    // Generate flashcards from important sentences (up to 5)
+    return sentences.slice(0, Math.min(sentences.length, 7)).map((sentence, index) => {
+      const words = sentence.trim().split(' ');
+      
+      // Find potentially important terms (longer words)
+      const importantTerms = words.filter(word => word.length > 5).slice(0, 2);
+      
+      // Generate a question based on the sentence
+      let question;
+      if (importantTerms.length > 0) {
+        question = `What is the significance of ${importantTerms.join(' and ')}?`;
+      } else if (sentence.includes('is') || sentence.includes('are')) {
+        question = sentence.replace(/(\w+)\s+(is|are)\s+/i, 'What $2 ').trim() + '?';
+      } else {
+        question = `What does the following statement explain: "${sentence.slice(0, 30)}..."?`;
+      }
+      
+      const categories = ['Concept', 'Definition', 'Process', 'Example', 'Fact'];
+      
+      return {
+        id: `mock-card-${Date.now()}-${index}`,
+        front: question,
+        back: sentence.trim(),
+        category: categories[Math.floor(Math.random() * categories.length)]
+      };
+    });
   };
   
   return (
@@ -166,6 +219,14 @@ const FlashcardGenerator = ({ onFlashcardsGenerated }: FlashcardGeneratorProps) 
           <h3 className="text-xl">AI Flashcard Generator</h3>
         </div>
         
+        {apiError && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>API Error</AlertTitle>
+            <AlertDescription>{apiError}</AlertDescription>
+          </Alert>
+        )}
+        
         <Textarea 
           placeholder="Paste your notes, textbook excerpts, or any learning material here..."
           className="min-h-32 text-base p-4 focus:ring-2 focus:ring-primary/50 transition-all"
@@ -173,21 +234,21 @@ const FlashcardGenerator = ({ onFlashcardsGenerated }: FlashcardGeneratorProps) 
           onChange={(e) => setInputText(e.target.value)}
         />
         
-        {/* Optional API Key input for users to provide their own key */}
+        {/* API Key input with better explanation */}
         <div className="text-sm">
           <label htmlFor="api-key" className="block mb-1 text-gray-700 dark:text-gray-300">
-            API Key (optional)
+            OpenAI API Key (required for real AI generation)
           </label>
           <input
             id="api-key"
             type="password"
-            placeholder="Paste your OpenAI API key here (optional)"
+            placeholder="sk-..."
             className="w-full px-3 py-2 border rounded-md text-sm"
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
           />
           <p className="mt-1 text-xs text-gray-500">
-            If not provided, we'll use our demo key with limited usage.
+            {apiKey ? "API key provided - will use OpenAI for generation" : "Without an API key, we'll use AI simulation mode"}
           </p>
         </div>
         
