@@ -74,9 +74,7 @@ const Index = () => {
               <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">
                 Ready to Transform Your Learning?
               </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-xl mx-auto">
-                Join thousands of students who are already studying smarter, not harder, with Locnix.ai.
-              </p>
+              <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-xl mx-auto">Join hundreds of students who are already studying smarter, not harder, with Locnix.ai.</p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" className="rounded-full px-8 shadow-lg hover:shadow-xl transition-all gap-2">
