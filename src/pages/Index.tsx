@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -8,19 +7,17 @@ import FlashcardGenerator from '@/components/FlashcardGenerator';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle, LightbulbIcon } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
-
 const Index = () => {
-  const { toast } = useToast();
-  
+  const {
+    toast
+  } = useToast();
   const handleDemoRequest = () => {
     toast({
       title: "Demo Requested",
       description: "Thank you for your interest! Our team will contact you soon."
     });
   };
-  
-  return (
-    <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col">
       <Navbar />
       
       <main className="flex-grow">
@@ -100,7 +97,7 @@ const Index = () => {
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 <li><a href="#" className="hover:text-primary transition-colors">About Us</a></li>
                 <li><a href="#" className="hover:text-primary transition-colors">Features</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Pricing</a></li>
+                
               </ul>
             </div>
             <div>
@@ -143,10 +140,8 @@ const Index = () => {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 const Testimonial = ({
   quote,
   author,
@@ -171,5 +166,4 @@ const Testimonial = ({
       </div>
     </div>;
 };
-
 export default Index;
