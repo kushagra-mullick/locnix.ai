@@ -1,4 +1,6 @@
+
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import Features from '@/components/Features';
@@ -6,17 +8,19 @@ import FlashcardGenerator from '@/components/FlashcardGenerator';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle, LightbulbIcon } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+
 const Index = () => {
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
+  
   const handleDemoRequest = () => {
     toast({
       title: "Demo Requested",
       description: "Thank you for your interest! Our team will contact you soon."
     });
   };
-  return <div className="min-h-screen flex flex-col">
+  
+  return (
+    <div className="min-h-screen flex flex-col">
       <Navbar />
       
       <main className="flex-grow">
@@ -81,7 +85,6 @@ const Index = () => {
                 <Button size="lg" className="rounded-full px-8 shadow-lg hover:shadow-xl transition-all gap-2">
                   Get Started <ArrowRight className="w-4 h-4" />
                 </Button>
-                
               </div>
             </div>
           </div>
@@ -98,7 +101,6 @@ const Index = () => {
                 <li><a href="#" className="hover:text-primary transition-colors">About Us</a></li>
                 <li><a href="#" className="hover:text-primary transition-colors">Features</a></li>
                 <li><a href="#" className="hover:text-primary transition-colors">Pricing</a></li>
-                
               </ul>
             </div>
             <div>
@@ -106,24 +108,33 @@ const Index = () => {
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 <li><a href="#" className="hover:text-primary transition-colors">Help Center</a></li>
                 <li><a href="#" className="hover:text-primary transition-colors">Tutorials</a></li>
-                
                 <li><a href="#" className="hover:text-primary transition-colors">Community</a></li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold text-lg mb-4">Legal</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                <li><a href="#" className="hover:text-primary transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Cookie Policy</a></li>
+                <li>
+                  <Link to="/privacy" className="hover:text-primary transition-colors">
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/terms" className="hover:text-primary transition-colors">
+                    Terms of Service
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/cookie-policy" className="hover:text-primary transition-colors">
+                    Cookie Policy
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold text-lg mb-4">Contact</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 <li>support@locnix.ai</li>
-                
-                
               </ul>
             </div>
           </div>
@@ -132,8 +143,10 @@ const Index = () => {
           </div>
         </div>
       </footer>
-    </div>;
+    </div>
+  );
 };
+
 const Testimonial = ({
   quote,
   author,
@@ -158,4 +171,5 @@ const Testimonial = ({
       </div>
     </div>;
 };
+
 export default Index;
