@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -7,17 +8,19 @@ import FlashcardGenerator from '@/components/FlashcardGenerator';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle, LightbulbIcon } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+
 const Index = () => {
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
+  
   const handleDemoRequest = () => {
     toast({
       title: "Demo Requested",
       description: "Thank you for your interest! Our team will contact you soon."
     });
   };
-  return <div className="min-h-screen flex flex-col">
+  
+  return (
+    <div className="min-h-screen flex flex-col">
       <Navbar />
       
       <main className="flex-grow">
@@ -93,17 +96,36 @@ const Index = () => {
             <div>
               <h3 className="font-semibold text-lg mb-4">Locnix.ai</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                <li><a href="#" className="hover:text-primary transition-colors">About Us</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Features</a></li>
-                
+                <li>
+                  <Link to="/about-us" className="hover:text-primary transition-colors">
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/features" className="hover:text-primary transition-colors">
+                    Features
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold text-lg mb-4">Resources</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                <li><a href="#" className="hover:text-primary transition-colors">Help Center</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Tutorials</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Community</a></li>
+                <li>
+                  <Link to="/help-center" className="hover:text-primary transition-colors">
+                    Help Center
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/tutorials" className="hover:text-primary transition-colors">
+                    Tutorials
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/community" className="hover:text-primary transition-colors">
+                    Community
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>
@@ -129,7 +151,11 @@ const Index = () => {
             <div>
               <h3 className="font-semibold text-lg mb-4">Contact</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                <li>dev.locnixai@gmail.com</li>
+                <li>
+                  <a href="mailto:dev.locnixai@gmail.com" className="hover:text-primary transition-colors">
+                    dev.locnixai@gmail.com
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
@@ -138,8 +164,10 @@ const Index = () => {
           </div>
         </div>
       </footer>
-    </div>;
+    </div>
+  );
 };
+
 const Testimonial = ({
   quote,
   author,
@@ -164,4 +192,5 @@ const Testimonial = ({
       </div>
     </div>;
 };
+
 export default Index;
