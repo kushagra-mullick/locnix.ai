@@ -170,16 +170,35 @@ export const FlashcardProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     return flashcards.find(card => card.id === id);
   };
 
-  const rateFlashcard = (id: string, rating: number) => {
-    setFlashcards(prevFlashcards =>
-      prevFlashcards.map(card => {
-        if (card.id === id) {
-          const nextReview = calculateNextReviewDate(card, rating);
-          return { ...card, ...nextReview };
-        }
-        return card;
-      })
-    );
+  const rateFlashcard = async (id: string, difficulty: 'easy' | 'medium' | 'hard') => {
+    const now = new Date();
+    const nextReviewDate = calculateNextReviewDate({ difficulty } as Flashcard, difficulty === 'easy' ? 5 : difficulty === 'medium' ? 3 : 1);
+    
+    const updatedCard = {
+      difficulty,
+      lastReviewed: now,
+      nextReviewDate
+    };
+
+    if (isAuthenticated) {
+      try {
+        await updateFlashcardById(id, updatedCard);
+        setFlashcards(prev =>
+          prev.map(card =>
+            card.id === id ? { ...card, ...updatedCard } : card
+          )
+        );
+      } catch (error) {
+        console.error('Error updating flashcard rating in Supabase', error);
+      }
+    } else {
+      // Local storage fallback
+      setFlashcards(prev =>
+        prev.map(card =>
+          card.id === id ? { ...card, ...updatedCard } : card
+        )
+      );
+    }
   };
 
   const getFlashcardsForStudy = (): Flashcard[] => {

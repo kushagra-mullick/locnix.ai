@@ -15,7 +15,7 @@ type AuthUser = {
 type AuthContextType = {
   user: AuthUser;
   isAuthenticated: boolean;
-  login: (userData?: { name: string, email: string }) => void;
+  login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, name?: string) => Promise<void>;
   logout: () => Promise<void>;
   isLoading: boolean;
@@ -25,7 +25,7 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isAuthenticated: false,
-  login: () => {},
+  login: async () => {},
   signup: async () => {},
   logout: async () => {},
   isLoading: false,

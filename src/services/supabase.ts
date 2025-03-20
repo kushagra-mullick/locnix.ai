@@ -54,9 +54,13 @@ export const resetPassword = async (email: string) => {
 
 // Flashcards database operations
 export const getFlashcards = async () => {
+  const { data: user } = await supabase.auth.getUser();
+  if (!user.user) throw new Error("User not authenticated");
+  
   const { data, error } = await supabase
     .from('flashcards')
-    .select('*');
+    .select('*')
+    .eq('user_id', user.user.id);
   
   if (error) throw error;
   
@@ -75,9 +79,13 @@ export const getFlashcards = async () => {
 };
 
 export const addFlashcard = async (flashcard: Omit<Flashcard, 'id' | 'dateCreated'>) => {
+  const { data: user } = await supabase.auth.getUser();
+  if (!user.user) throw new Error("User not authenticated");
+  
   const { data, error } = await supabase
     .from('flashcards')
     .insert({
+      user_id: user.user.id,
       front: flashcard.front,
       back: flashcard.back,
       category: flashcard.category,
