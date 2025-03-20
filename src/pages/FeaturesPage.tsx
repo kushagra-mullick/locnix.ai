@@ -51,50 +51,73 @@ const FeaturesPage = () => {
         </div>
       </main>
       
-      {/* Footer - Reuse existing footer from other pages */}
+      {/* Footer - Updated with correct links */}
       <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 py-12">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div>
               <h3 className="font-semibold text-lg mb-4">Locnix.ai</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                <li><a href="#" className="hover:text-primary transition-colors">About Us</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Features</a></li>
-                
+                <li>
+                  <Link to="/about-us" className="hover:text-primary transition-colors">
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/features" className="hover:text-primary transition-colors">
+                    Features
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold text-lg mb-4">Resources</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                <li><a href="#" className="hover:text-primary transition-colors">Help Center</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Tutorials</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Community</a></li>
+                <li>
+                  <Link to="/help-center" className="hover:text-primary transition-colors">
+                    Help Center
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/tutorials" className="hover:text-primary transition-colors">
+                    Tutorials
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/community" className="hover:text-primary transition-colors">
+                    Community
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold text-lg mb-4">Legal</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <Link to="/privacy" className="hover:text-primary transition-colors">
                     Privacy Policy
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <Link to="/terms" className="hover:text-primary transition-colors">
                     Terms of Service
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <Link to="/cookie-policy" className="hover:text-primary transition-colors">
                     Cookie Policy
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold text-lg mb-4">Contact</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                <li>dev.locnixai@gmail.com</li>
+                <li>
+                  <a href="mailto:dev.locnixai@gmail.com" className="hover:text-primary transition-colors">
+                    dev.locnixai@gmail.com
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
