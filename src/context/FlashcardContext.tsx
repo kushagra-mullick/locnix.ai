@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Flashcard, FlashcardContextType } from '../types/flashcard';
 import { sampleFlashcards } from '../data/sampleFlashcards';
@@ -39,7 +40,7 @@ export const FlashcardProvider: React.FC<{ children: React.ReactNode }> = ({ chi
               ...card,
               dateCreated: new Date(card.dateCreated),
               lastReviewed: card.lastReviewed ? new Date(card.lastReviewed) : undefined,
-              nextReviewDate: new Date(card.nextReviewDate) ? new Date(card.nextReviewDate) : undefined
+              nextReviewDate: card.nextReviewDate ? new Date(card.nextReviewDate) : undefined
             }));
             setFlashcards(processedFlashcards);
           } catch (error) {
