@@ -1,4 +1,6 @@
+
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import { Helmet } from 'react-helmet';
 import { 
@@ -36,39 +38,101 @@ const HelpCenter = () => {
                 <AccordionContent className="text-gray-600 dark:text-gray-300">
                   <p>There are several ways to create flashcards on Locnix.ai:</p>
                   <ol className="list-decimal pl-5 mt-2 space-y-2">
-                    <li>Use our AI generator by pasting text or uploading a document</li>
-                    <li>Create flashcards manually through your dashboard</li>
-                    <li>Import existing flashcards from other platforms</li>
+                    <li><strong>AI Generator:</strong> Upload a PDF document, paste text, or provide a topic, and our AI will automatically create relevant flashcards that test conceptual understanding.</li>
+                    <li><strong>Manual Creation:</strong> Create custom flashcards by clicking the "Create New" button on your dashboard and filling in the front and back content.</li>
+                    <li><strong>Import:</strong> Import existing flashcards from Anki, Quizlet, or CSV files by selecting "Import" from your dashboard.</li>
+                    <li><strong>Collaborative Creation:</strong> Join a study group to collaborate on creating and sharing flashcards with classmates.</li>
                   </ol>
-                  <p className="mt-2">Once created, your flashcards will automatically be organized and scheduled for review.</p>
+                  <p className="mt-2">Your created flashcards are immediately added to your library and scheduled according to our spaced repetition algorithm.</p>
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-2">
                 <AccordionTrigger className="text-lg font-medium">How does the AI flashcard generator work?</AccordionTrigger>
                 <AccordionContent className="text-gray-600 dark:text-gray-300">
-                  Our AI analyzes your content to identify key concepts and relationships, then creates flashcards that test true understanding rather than simple memorization. The AI considers factors like complexity, importance, and learning context when generating cards.
+                  <p>Our AI flashcard generator uses advanced natural language processing to:</p>
+                  <ul className="list-disc pl-5 mt-2 space-y-2">
+                    <li>Identify key concepts, definitions, and relationships in your learning material</li>
+                    <li>Create question-answer pairs that promote active recall and critical thinking</li>
+                    <li>Generate multiple question types (concept definition, application, comparison, etc.)</li>
+                    <li>Adapt difficulty based on your learning level and subject matter</li>
+                  </ul>
+                  <p className="mt-2">Unlike other flashcard apps, our AI focuses on creating cards that test deeper understanding rather than mere memorization. You can edit any AI-generated cards or ask the AI to regenerate alternatives.</p>
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-3">
-                <AccordionTrigger className="text-lg font-medium">What is spaced repetition?</AccordionTrigger>
+                <AccordionTrigger className="text-lg font-medium">What is spaced repetition and how does it work?</AccordionTrigger>
                 <AccordionContent className="text-gray-600 dark:text-gray-300">
-                  Spaced repetition is a learning technique where review sessions are scheduled at increasing intervals. Information you find difficult appears more frequently, while material you know well appears less often. This optimizes your study time and strengthens long-term memory.
+                  <p>Spaced repetition is a scientifically-proven learning technique that optimizes long-term memory retention by scheduling reviews at strategic intervals.</p>
+                  
+                  <p className="mt-2"><strong>How our spaced repetition system works:</strong></p>
+                  <ol className="list-decimal pl-5 mt-2 space-y-2">
+                    <li>After studying a flashcard, you rate how well you knew the answer on a scale of 1-5</li>
+                    <li>Cards you find difficult (rated 1-2) appear more frequently in your review sessions</li>
+                    <li>Cards you know well (rated 4-5) appear less often but at increasing intervals</li>
+                    <li>The algorithm continuously adapts to your performance, optimizing your study schedule</li>
+                  </ol>
+                  
+                  <p className="mt-2">This approach ensures you spend more time on challenging material and less time reviewing what you already know well, maximizing learning efficiency.</p>
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-4">
-                <AccordionTrigger className="text-lg font-medium">How do I sync my flashcards across devices?</AccordionTrigger>
+                <AccordionTrigger className="text-lg font-medium">How do I use the study analytics dashboard?</AccordionTrigger>
                 <AccordionContent className="text-gray-600 dark:text-gray-300">
-                  Syncing happens automatically when you sign in with the same account. Your flashcards, progress, and settings will be available on any device where you use Locnix.ai.
+                  <p>Your study analytics dashboard provides valuable insights into your learning progress:</p>
+                  
+                  <ul className="list-disc pl-5 mt-2 space-y-2">
+                    <li><strong>Performance Metrics:</strong> Track your retention rate, study streak, and time spent studying</li>
+                    <li><strong>Knowledge Maps:</strong> Visualize your strengths and weaknesses across different subjects and topics</li>
+                    <li><strong>Learning Curve:</strong> See how your recall improves over time for specific card sets</li>
+                    <li><strong>Study Schedule:</strong> View upcoming review sessions and card load for optimal planning</li>
+                    <li><strong>Mastery Score:</strong> Monitor your overall progress toward mastering each subject</li>
+                  </ul>
+                  
+                  <p className="mt-2">Access your analytics by clicking the "Analytics" tab in your dashboard. You can filter data by time period, subject, or deck to gain targeted insights into your learning patterns.</p>
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-5">
-                <AccordionTrigger className="text-lg font-medium">Can I share my flashcards with others?</AccordionTrigger>
+                <AccordionTrigger className="text-lg font-medium">How do I customize my study settings?</AccordionTrigger>
                 <AccordionContent className="text-gray-600 dark:text-gray-300">
-                  Yes! You can share individual flashcards or entire decks with other Locnix.ai users. Look for the share button in your dashboard to generate a shareable link.
+                  <p>Locnix.ai offers several ways to personalize your study experience:</p>
+                  
+                  <ul className="list-disc pl-5 mt-2 space-y-2">
+                    <li><strong>Daily Card Limit:</strong> Set the maximum number of cards to review each day</li>
+                    <li><strong>Study Session Duration:</strong> Define your preferred study session length (time or card count)</li>
+                    <li><strong>Algorithm Intensity:</strong> Adjust how aggressively the spaced repetition algorithm schedules reviews</li>
+                    <li><strong>Card Display:</strong> Customize how cards appear (font size, display options, etc.)</li>
+                    <li><strong>Notification Preferences:</strong> Set reminders for daily study sessions and upcoming reviews</li>
+                  </ul>
+                  
+                  <p className="mt-2">Access these settings by clicking on your profile icon in the top right corner and selecting "Study Settings" from the dropdown menu.</p>
+                </AccordionContent>
+              </AccordionItem>
+              
+              <AccordionItem value="item-6">
+                <AccordionTrigger className="text-lg font-medium">How do I join or create a study group?</AccordionTrigger>
+                <AccordionContent className="text-gray-600 dark:text-gray-300">
+                  <p>Collaborative learning with study groups is easy on Locnix.ai:</p>
+                  
+                  <p className="mt-2"><strong>To create a new study group:</strong></p>
+                  <ol className="list-decimal pl-5 mt-2 space-y-2">
+                    <li>Navigate to the "Community" tab in your dashboard</li>
+                    <li>Click "Create New Group" and enter a name, description, and subject area</li>
+                    <li>Choose privacy settings (public, invite-only, or private)</li>
+                    <li>Invite members by email or username</li>
+                  </ol>
+                  
+                  <p className="mt-2"><strong>To join an existing group:</strong></p>
+                  <ol className="list-decimal pl-5 mt-2 space-y-2">
+                    <li>Browse public groups in the "Community" section</li>
+                    <li>Request to join a group by clicking the "Join" button</li>
+                    <li>Alternatively, accept an invitation sent to your email or notifications</li>
+                  </ol>
+                  
+                  <p className="mt-2">Study group members can share flashcard decks, collaborate on creating new cards, and track group learning progress.</p>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -166,5 +230,4 @@ const HelpCenter = () => {
   );
 };
 
-import { Link } from 'react-router-dom';
 export default HelpCenter;
