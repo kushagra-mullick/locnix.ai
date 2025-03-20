@@ -84,9 +84,7 @@ const AboutUs = () => {
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
-                    Community
-                  </a>
+                  
                 </li>
               </ul>
             </div>
