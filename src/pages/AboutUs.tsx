@@ -1,10 +1,8 @@
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import { Helmet } from 'react-helmet';
-
 const AboutUs = () => {
-  return (
-    <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col">
       <Helmet>
         <title>About Us | Locnix.ai</title>
         <meta name="description" content="Learn more about Locnix.ai's mission to transform learning through AI-powered flashcards" />
@@ -67,9 +65,7 @@ const AboutUs = () => {
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
-                    Features
-                  </a>
+                  
                 </li>
                 
               </ul>
@@ -126,8 +122,6 @@ const AboutUs = () => {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default AboutUs;
