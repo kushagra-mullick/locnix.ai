@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import { Helmet } from 'react-helmet';
-import { PlayCircle, FileText, BookOpen, Lightbulb, LineChart, Users } from 'lucide-react';
+import { PlayCircle, FileText, BookOpen, Lightbulb, LineChart, Users, Mail, Twitter, MessageSquare } from 'lucide-react';
 
 const Tutorials = () => {
   return (
@@ -113,6 +113,17 @@ const Tutorials = () => {
               Check our <Link to="/help-center" className="text-primary hover:underline">Help Center</Link> or 
               contact us at <a href="mailto:dev.locnixai@gmail.com" className="text-primary hover:underline">dev.locnixai@gmail.com</a>
             </p>
+            <div className="flex justify-center gap-4">
+              <a href="https://discord.gg/NDX2XnHsaM" target="_blank" rel="noreferrer" className="text-primary hover:text-primary/80 transition-colors">
+                <MessageSquare className="w-6 h-6" />
+              </a>
+              <a href="https://x.com/locnixai" target="_blank" rel="noreferrer" className="text-primary hover:text-primary/80 transition-colors">
+                <Twitter className="w-6 h-6" />
+              </a>
+              <a href="mailto:dev.locnixai@gmail.com" className="text-primary hover:text-primary/80 transition-colors">
+                <Mail className="w-6 h-6" />
+              </a>
+            </div>
           </div>
         </div>
       </main>
@@ -180,8 +191,18 @@ const Tutorials = () => {
               <h3 className="font-semibold text-lg mb-4">Contact</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 <li>
-                  <a href="mailto:dev.locnixai@gmail.com" className="hover:text-primary transition-colors">
-                    dev.locnixai@gmail.com
+                  <a href="mailto:dev.locnixai@gmail.com" className="hover:text-primary transition-colors flex items-center gap-2">
+                    <Mail className="w-4 h-4" /> dev.locnixai@gmail.com
+                  </a>
+                </li>
+                <li>
+                  <a href="https://discord.gg/NDX2XnHsaM" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4" /> Discord Server
+                  </a>
+                </li>
+                <li>
+                  <a href="https://x.com/locnixai" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors flex items-center gap-2">
+                    <Twitter className="w-4 h-4" /> @locnixai
                   </a>
                 </li>
               </ul>

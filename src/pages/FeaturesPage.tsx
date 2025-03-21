@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Features from '@/components/Features';
 import { Helmet } from 'react-helmet';
+import { Mail, Twitter, MessageSquare } from 'lucide-react';
 
 const FeaturesPage = () => {
   return (
@@ -51,7 +52,7 @@ const FeaturesPage = () => {
         </div>
       </main>
       
-      {/* Footer - Updated with correct links */}
+      {/* Footer - Updated with correct links and social icons */}
       <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 py-12">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -114,8 +115,18 @@ const FeaturesPage = () => {
               <h3 className="font-semibold text-lg mb-4">Contact</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 <li>
-                  <a href="mailto:dev.locnixai@gmail.com" className="hover:text-primary transition-colors">
-                    dev.locnixai@gmail.com
+                  <a href="mailto:dev.locnixai@gmail.com" className="hover:text-primary transition-colors flex items-center gap-2">
+                    <Mail className="w-4 h-4" /> dev.locnixai@gmail.com
+                  </a>
+                </li>
+                <li>
+                  <a href="https://discord.gg/NDX2XnHsaM" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4" /> Discord Server
+                  </a>
+                </li>
+                <li>
+                  <a href="https://x.com/locnixai" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors flex items-center gap-2">
+                    <Twitter className="w-4 h-4" /> @locnixai
                   </a>
                 </li>
               </ul>

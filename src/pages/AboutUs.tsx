@@ -1,8 +1,13 @@
+
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import { Helmet } from 'react-helmet';
+import { Mail, Github, Twitter, MessageSquare } from 'lucide-react';
+
 const AboutUs = () => {
-  return <div className="min-h-screen flex flex-col">
+  return (
+    <div className="min-h-screen flex flex-col">
       <Helmet>
         <title>About Us | Locnix.ai</title>
         <meta name="description" content="Learn more about Locnix.ai's mission to transform learning through AI-powered flashcards" />
@@ -48,11 +53,26 @@ const AboutUs = () => {
             <p>
               We'd love to hear from you! Reach out to us at <a href="mailto:dev.locnixai@gmail.com" className="text-primary">dev.locnixai@gmail.com</a>
             </p>
+            
+            <div className="flex items-center gap-4 mt-4">
+              <a href="https://discord.gg/NDX2XnHsaM" target="_blank" rel="noreferrer" className="text-primary hover:text-primary/80 transition-colors">
+                <MessageSquare className="w-6 h-6" />
+              </a>
+              <a href="https://x.com/locnixai" target="_blank" rel="noreferrer" className="text-primary hover:text-primary/80 transition-colors">
+                <Twitter className="w-6 h-6" />
+              </a>
+              <a href="mailto:dev.locnixai@gmail.com" className="text-primary hover:text-primary/80 transition-colors">
+                <Mail className="w-6 h-6" />
+              </a>
+              <a href="https://github.com/locnix.ai" target="_blank" rel="noreferrer" className="text-primary hover:text-primary/80 transition-colors">
+                <Github className="w-6 h-6" />
+              </a>
+            </div>
           </div>
         </div>
       </main>
       
-      {/* Footer - Reuse existing footer from other pages */}
+      {/* Footer */}
       <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 py-12">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -60,31 +80,34 @@ const AboutUs = () => {
               <h3 className="font-semibold text-lg mb-4">Locnix.ai</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <Link to="/about-us" className="hover:text-primary transition-colors">
                     About Us
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  
+                  <Link to="/features" className="hover:text-primary transition-colors">
+                    Features
+                  </Link>
                 </li>
-                
               </ul>
             </div>
             <div>
               <h3 className="font-semibold text-lg mb-4">Resources</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <Link to="/help-center" className="hover:text-primary transition-colors">
                     Help Center
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <Link to="/tutorials" className="hover:text-primary transition-colors">
                     Tutorials
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  
+                  <Link to="/community" className="hover:text-primary transition-colors">
+                    Community
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -92,26 +115,40 @@ const AboutUs = () => {
               <h3 className="font-semibold text-lg mb-4">Legal</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <Link to="/privacy" className="hover:text-primary transition-colors">
                     Privacy Policy
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <Link to="/terms" className="hover:text-primary transition-colors">
                     Terms of Service
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <Link to="/cookie-policy" className="hover:text-primary transition-colors">
                     Cookie Policy
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold text-lg mb-4">Contact</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                <li>dev.locnixai@gmail.com</li>
+                <li>
+                  <a href="mailto:dev.locnixai@gmail.com" className="hover:text-primary transition-colors flex items-center gap-2">
+                    <Mail className="w-4 h-4" /> dev.locnixai@gmail.com
+                  </a>
+                </li>
+                <li>
+                  <a href="https://discord.gg/NDX2XnHsaM" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4" /> Discord Server
+                  </a>
+                </li>
+                <li>
+                  <a href="https://x.com/locnixai" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors flex items-center gap-2">
+                    <Twitter className="w-4 h-4" /> @locnixai
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
@@ -120,6 +157,8 @@ const AboutUs = () => {
           </div>
         </div>
       </footer>
-    </div>;
+    </div>
+  );
 };
+
 export default AboutUs;

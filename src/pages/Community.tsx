@@ -1,10 +1,13 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import { Helmet } from 'react-helmet';
-import { Users, MessageCircle, Award, Calendar } from 'lucide-react';
+import { Users, MessageCircle, Award, Calendar, Mail, Twitter, MessageSquare } from 'lucide-react';
+
 const Community = () => {
-  return <div className="min-h-screen flex flex-col">
+  return (
+    <div className="min-h-screen flex flex-col">
       <Helmet>
         <title>Community | Locnix.ai</title>
         <meta name="description" content="Join the Locnix.ai learning community and connect with other students and educators" />
@@ -31,9 +34,6 @@ const Community = () => {
             <FeatureCard icon={<Calendar className="w-10 h-10 text-primary" />} title="Events & Webinars" description="Attend virtual events, workshops, and webinars led by experts and fellow community members." />
           </div>
           
-          {/* Upcoming Events Section */}
-          
-          
           {/* Join Community CTA */}
           <div className="max-w-3xl mx-auto text-center bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl p-8">
             <h2 className="text-2xl font-semibold mb-4">Ready to Join Our Community?</h2>
@@ -46,6 +46,14 @@ const Community = () => {
               </a>
               <a href="mailto:dev.locnixai@gmail.com" className="inline-block bg-white dark:bg-gray-800 px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all">
                 Contact Us
+              </a>
+            </div>
+            <div className="flex justify-center mt-6 gap-4">
+              <a href="https://discord.gg/NDX2XnHsaM" target="_blank" rel="noreferrer" className="text-primary hover:text-primary/80 transition-colors">
+                <MessageSquare className="w-6 h-6" />
+              </a>
+              <a href="https://x.com/locnixai" target="_blank" rel="noreferrer" className="text-primary hover:text-primary/80 transition-colors">
+                <Twitter className="w-6 h-6" />
               </a>
             </div>
           </div>
@@ -115,8 +123,18 @@ const Community = () => {
               <h3 className="font-semibold text-lg mb-4">Contact</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 <li>
-                  <a href="mailto:dev.locnixai@gmail.com" className="hover:text-primary transition-colors">
-                    dev.locnixai@gmail.com
+                  <a href="mailto:dev.locnixai@gmail.com" className="hover:text-primary transition-colors flex items-center gap-2">
+                    <Mail className="w-4 h-4" /> dev.locnixai@gmail.com
+                  </a>
+                </li>
+                <li>
+                  <a href="https://discord.gg/NDX2XnHsaM" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4" /> Discord Server
+                  </a>
+                </li>
+                <li>
+                  <a href="https://x.com/locnixai" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors flex items-center gap-2">
+                    <Twitter className="w-4 h-4" /> @locnixai
                   </a>
                 </li>
               </ul>
@@ -127,8 +145,10 @@ const Community = () => {
           </div>
         </div>
       </footer>
-    </div>;
+    </div>
+  );
 };
+
 const FeatureCard = ({
   icon,
   title,
@@ -138,29 +158,13 @@ const FeatureCard = ({
   title: string;
   description: string;
 }) => {
-  return <div className="glass-card p-6 flex flex-col">
+  return (
+    <div className="glass-card p-6 flex flex-col">
       <div className="mb-4">{icon}</div>
       <h3 className="text-xl font-semibold mb-2">{title}</h3>
       <p className="text-gray-600 dark:text-gray-300">{description}</p>
-    </div>;
+    </div>
+  );
 };
-const EventCard = ({
-  title,
-  date,
-  time,
-  host
-}: {
-  title: string;
-  date: string;
-  time: string;
-  host: string;
-}) => {
-  return <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-100 dark:border-gray-700">
-      <h3 className="text-lg font-semibold mb-2">{title}</h3>
-      <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">📅 {date}</div>
-      <div className="text-sm text-gray-500 dark:text-gray-400 mb-3">⏰ {time}</div>
-      <div className="text-sm text-gray-600 dark:text-gray-300">Hosted by: {host}</div>
-      <button className="mt-4 text-primary hover:underline text-sm">Learn more</button>
-    </div>;
-};
+
 export default Community;
