@@ -19,7 +19,8 @@ export const signUp = async (email: string, password: string, name?: string) => 
     options: {
       data: {
         name,
-      }
+      },
+      emailRedirectTo: `${window.location.origin}/dashboard`,
     }
   });
   
