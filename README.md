@@ -1,5 +1,4 @@
 
-
 # Locnix.ai - AI-Powered Flashcard Platform
 
 ![Locnix.ai Logo](/public/locnixai.png)

@@ -6,7 +6,7 @@ import Hero from '@/components/Hero';
 import Features from '@/components/Features';
 import FlashcardGenerator from '@/components/FlashcardGenerator';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, CheckCircle, LightbulbIcon } from 'lucide-react';
+import { ArrowRight, CheckCircle, LightbulbIcon, Twitter, MessageSquare, Mail } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
 const Index = () => {
@@ -152,8 +152,18 @@ const Index = () => {
               <h3 className="font-semibold text-lg mb-4">Contact</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 <li>
-                  <a href="mailto:dev.locnixai@gmail.com" className="hover:text-primary transition-colors">
-                    dev.locnixai@gmail.com
+                  <a href="mailto:dev.locnixai@gmail.com" className="hover:text-primary transition-colors flex items-center gap-2">
+                    <Mail className="w-4 h-4" /> dev.locnixai@gmail.com
+                  </a>
+                </li>
+                <li>
+                  <a href="https://discord.gg/NDX2XnHsaM" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4" /> Discord Server
+                  </a>
+                </li>
+                <li>
+                  <a href="https://x.com/locnixai" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors flex items-center gap-2">
+                    <Twitter className="w-4 h-4" /> @locnixai
                   </a>
                 </li>
               </ul>
