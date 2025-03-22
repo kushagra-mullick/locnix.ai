@@ -24,8 +24,8 @@ export const FlashcardProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           setFlashcards(cards);
         } catch (error) {
           console.error('Error loading flashcards from Supabase', error);
-          // Use sample flashcards as fallback
-          setFlashcards(sampleFlashcards);
+          // Use empty array as fallback instead of sample flashcards
+          setFlashcards([]);
         } finally {
           setIsLoading(false);
         }
@@ -45,10 +45,10 @@ export const FlashcardProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             setFlashcards(processedFlashcards);
           } catch (error) {
             console.error('Error parsing flashcards from localStorage', error);
-            setFlashcards(sampleFlashcards); // Use sample data if error
+            setFlashcards([]); // Use empty array if error
           }
         } else {
-          setFlashcards(sampleFlashcards); // Use sample data if no saved data
+          setFlashcards([]); // Use empty array instead of sample data
         }
         setIsLoading(false);
       }
