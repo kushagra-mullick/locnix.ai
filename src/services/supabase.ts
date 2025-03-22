@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { Flashcard } from "@/types/flashcard";
 
@@ -20,7 +19,6 @@ export const signUp = async (email: string, password: string, name?: string) => 
       data: {
         name,
       },
-      emailRedirectTo: `${window.location.origin}/dashboard`,
     }
   });
   
@@ -42,15 +40,6 @@ export const getUser = async () => {
 export const getSession = async () => {
   const { data } = await supabase.auth.getSession();
   return data?.session || null;
-};
-
-export const resetPassword = async (email: string) => {
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/reset-password`,
-  });
-  
-  if (error) throw error;
-  return { success: true };
 };
 
 // Flashcards database operations

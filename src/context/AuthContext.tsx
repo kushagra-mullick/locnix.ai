@@ -133,8 +133,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (authUser) {
         toast({
-          title: "Account created!",
-          description: "Please check your email to confirm your registration.",
+          title: "Account created successfully",
+          description: "You can now sign in with your credentials.",
         });
       }
     } catch (error: any) {
